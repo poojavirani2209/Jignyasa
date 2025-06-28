@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>DEEL</title>
+</head>
+
+<body>
+
+    <h1>DEEL</h1>
+
+    <div id="container"></div>
+
+    <script>
+        const container = document.getElementById('container');
+
+        function createInputBox(name) {
+            const input = document.createElement('input');
+            input.placeholder = name;
+            input.name = name;
+            return input;
+        }
+
+        function createSection(title) {
+            const section = document.createElement('div');
+            section.className = 'section';
+            const heading = document.createElement('h3');
+            heading.textContent = title;
+            section.appendChild(heading);
+            return section;
+        }
+
+        function getContractById() {
+            const section = createSection("Get Contract");
+            const id = createInputBox("Contract Id");
+            const profile_id = createInputBox("Profile Id");
+            const button = document.createElement("button");
+            const response = document.createElement("span");
+
+            button.textContent = "Hit";
+            button.onclick = async () => {
+                try {
+                    const res = await fetch(`http://localhost:3001/contracts/${id.value}`, {
+                        method: 'GET',
+                        headers: {
+                            'profile_id': `${profile_id.value}`,
+                        },
+                    })
+                    const data = await res.json();
+                    response.textContent = JSON.stringify(data);
+                } catch (err) {
+                    response.textContent = "Error: " + err.message;
+                }
+            };
+
+            section.append(id, profile_id, button, response);
+            response.className = "response";
+            container.appendChild(section);
+        }
+
+        function getNonTerminatedContracts() {
+            const section = createSection("Get Non-Terminated Contracts");
+            const profile_id = createInputBox("Profile Id");
+            const button = document.createElement("button");
+            const response = document.createElement("span");
+
+            button.textContent = "Hit";
+            button.onclick = async () => {
+                try {
+                    const res = await fetch(`http://localhost:3001/contracts`, {
+                        method: 'GET',
+                        headers: {
+                            'profile_id': `${profile_id.value}`,
+                        },
+                    })
+                    const data = await res.json();
+                    response.textContent = JSON.stringify(data);
+                } catch (err) {
+                    response.textContent = "Error: " + err.message;
+                }
+            };
+
+            section.append(profile_id, button, response);
+            response.className = "response";
+            container.appendChild(section);
+        }
+
+        function getUnpaidJobsOfActiveContracts() {
+            const section = createSection("Unpaid Jobs Of Active Contracts");
+            const profileId = createInputBox("profile_id");
+            const button = document.createElement("button");
+            const response = document.createElement("span");
+
+            button.textContent = "Hit";
+            button.onclick = async () => {
+                try {
+                    const res = await fetch('http://localhost:3001/jobs/unpaid', {
+                        method: 'GET',
+                        headers: {
+                            'profile_id': `${profileId.value}`,
+                        },
+                    })
+                    const data = await res.json();
+                    response.textContent = JSON.stringify(data);
+                } catch (err) {
+                    response.textContent = "Error: " + err.message;
+                }
+            };
+
+            section.append(profileId, button, response);
+            response.className = "response";
+            container.appendChild(section);
+        }
+
+        function payForUnPaidJob() {
+            const section = createSection("Pay for Unpaid Job");
+            const jobId = createInputBox("job_id");
+            const profileId = createInputBox("profile_id");
+            const button = document.createElement("button");
+            const response = document.createElement("span");
+
+            button.textContent = "Hit";
+            button.onclick = async () => {
+                try {
+                    const res = await fetch(`http://localhost:3001/jobs/${jobId.value}/pay`, {
+                        method: 'POST',
+                        headers: {
+                            'profile_id': `${profileId.value}`,
+                        },
+                    })
+                    const data = await res.json();
+                    response.textContent = JSON.stringify(data);
+                } catch (err) {
+                    response.textContent = "Error: " + err.message;
+                }
+            };
+
+            section.append(jobId, profileId, button, response);
+            response.className = "response";
+            container.appendChild(section);
+        }
+
+        function depositMoney() {
+            const section = createSection("Deposit Money");
+            const userId = createInputBox("userId");
+            const amount = createInputBox("amount");
+            const button = document.createElement("button");
+            const response = document.createElement("span");
+
+            button.textContent = "Hit";
+
+            button.onclick = async () => {
+                try {
+                    const res = await fetch(`http://localhost:3001/balances/deposit/${userId.value}`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ amount: Number(amount.value) })
+                    });
+                    const data = await res.json();
+                    response.textContent = JSON.stringify(data);
+                } catch (err) {
+                    response.textContent = "Error: " + err.message;
+                }
+            };
+
+            section.append(userId, amount, button, response);
+            response.className = "response";
+            container.appendChild(section);
+        }
+
+        function getBestProfession() {
+            const section = createSection("Best Profession");
+            const start = createInputBox("start");
+            const end = createInputBox("end");
+            const button = document.createElement("button");
+            const response = document.createElement("span");
+
+            button.textContent = "Hit";
+            button.onclick = async () => {
+                try {
+                    const res = await fetch(`http://localhost:3001/admin/best-profession?start=${start.value}&end=${end.value}`);
+                    const data = await res.json();
+                    response.textContent = JSON.stringify(data);
+                } catch (err) {
+                    response.textContent = "Error: " + err.message;
+                }
+            };
+
+            section.append(start, end, button, response);
+            response.className = "response";
+            container.appendChild(section);
+        }
+
+        function getBestClients() {
+            const section = createSection("Best Clients");
+            const start = createInputBox("start");
+            const end = createInputBox("end");
+            const limit = createInputBox("limit");
+            const button = document.createElement("button");
+            const response = document.createElement("span");
+
+            button.textContent = "Hit";
+            button.onclick = async () => {
+                try {
+                    const res = await fetch(`http://localhost:3001/admin/best-clients?start=${start.value}&end=${end.value}&limit=${Number(limit.value)}`);
+                    const data = await res.json();
+                    response.textContent = JSON.stringify(data);
+                } catch (err) {
+                    response.textContent = "Error: " + err.message;
+                }
+            };
+
+            section.append(start, end, limit, button, response);
+            response.className = "response";
+            container.appendChild(section);
+        }
+
+        getContractById();
+        getNonTerminatedContracts();
+        getUnpaidJobsOfActiveContracts();
+        payForUnPaidJob();
+        depositMoney();
+        getBestProfession();
+        getBestClients();
+
+    </script>
+
+</body>
+
+</html>

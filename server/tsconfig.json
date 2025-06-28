@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "ES6",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["node","jest"],
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*.ts", "src/middleware/profile.middleware.ts"],
+  "exclude": ["node_modules"]
+}
