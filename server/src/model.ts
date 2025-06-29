@@ -100,10 +100,45 @@ LearnerGoal.init(
   }
 );
 
+class ChatHistory extends Sequelize.Model {}
+ChatHistory.init(
+  {
+    id: {
+      type: Sequelize.DataTypes.UUID,
+      defaultValue: Sequelize.DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    userId: {
+      type: Sequelize.DataTypes.UUID,
+      allowNull: false,
+    },
+    goalId: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: false,
+    },
+    subTopicName: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: false,
+    },
+    messages: {
+      type: Sequelize.DataTypes.JSON,
+      allowNull: false,
+    },
+    lastUpdatedAt: {
+      type: Sequelize.DataTypes.DATE,
+      defaultValue: Sequelize.NOW,
+    },
+  },
+  {
+    sequelize,
+    modelName: "ChatHistory",
+  }
+);
+
 User.hasOne(LearnerProfile, { foreignKey: "userId", onDelete: "CASCADE" });
 User.hasMany(LearnerGoal, { foreignKey: "userId", onDelete: "CASCADE" });
 
 LearnerProfile.belongsTo(User, { foreignKey: "userId" });
 LearnerGoal.belongsTo(User, { foreignKey: "userId" });
 
-export { sequelize, User, LearnerProfile, LearnerGoal };
+export { sequelize, User, LearnerProfile, LearnerGoal, ChatHistory };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export interface LearningPath {
   topics: Topic[];
@@ -21,13 +21,26 @@ export interface Resource {
 
 const GoalSession: React.FC = () => {
   const location = useLocation();
-  const { learningPath } = location.state as { learningPath: LearningPath };
+  const navigate = useNavigate();
+  const { learningPath, goalId } = location.state as {
+    learningPath: LearningPath;
+    goalId: string;
+  };
 
   const [selectedTopicIdx, setSelectedTopicIdx] = useState(0);
   const [selectedSubIdx, setSelectedSubIdx] = useState(0);
 
   const selectedSubTopic =
     learningPath.topics[selectedTopicIdx]?.subtopics[selectedSubIdx];
+
+  const handleChatClick = () => {
+    navigate("/chat", {
+      state: {
+        subtopicName: selectedSubTopic?.name,
+        goalId: goalId,
+      },
+    });
+  };
 
   return (
     <div className="flex h-screen font-sans">
@@ -73,14 +86,12 @@ const GoalSession: React.FC = () => {
           {/* Tutor Panel */}
           <div className="w-1/2 border-r p-4 overflow-y-auto bg-gray-50">
             <h3 className="text-lg font-semibold mb-2">🎓 Tutor Assistant</h3>
-            <p className="text-sm text-gray-600 mb-2">
-              Chat-based tutor to help with this subtopic.
-            </p>
-            {/* Chat Component Placeholder */}
-            <div className="border rounded-md p-3 h-[85%] bg-white text-gray-800 overflow-y-auto">
-              {/* Replace with your Chat component */}
-              <p className="italic text-gray-400">Coming soon...</p>
-            </div>
+            <button
+              className="flex items-center px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+              onClick={handleChatClick}
+            >
+              Chat
+            </button>
           </div>
 
           {/* Content Panel */}

@@ -8,7 +8,7 @@ export interface LLMMessage {
 }
 
 export interface LLMResponse {
-  content: LearningPath;
+  content: LearningPath|string;
 }
 
 export interface LLMProvider {

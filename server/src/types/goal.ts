@@ -30,3 +30,10 @@ export interface Resource {
   url: string;
   type?: "pdf" | "html";
 }
+
+export interface Question{
+  id:string,
+  question:string,
+  type:"multiple-choice",
+  options:string[]
+}

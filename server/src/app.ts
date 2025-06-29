@@ -8,6 +8,7 @@ import { sequelize } from "./model";
 import cors from "cors";
 import dotenv from "dotenv";
 import goalRouter from "./routes/goal.routes";
+import chatRouter from "./routes/chat.routes";
 
 dotenv.config();
 const app = express();
@@ -20,5 +21,6 @@ app.set("models", sequelize.models);
 app.use("/auth", authRouter);
 app.use("/profile", profileRouter);
 app.use("/goal",goalRouter)
+app.use("/chat",chatRouter)
 
 export default app;

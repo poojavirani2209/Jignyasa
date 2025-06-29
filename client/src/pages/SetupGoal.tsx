@@ -10,26 +10,9 @@ const SetupGoal: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return alert("Not logged in");
-
-    try {
-      const response = await api.post("/goal", {
-        goal,
-        days,
-        hoursPerDay,
-      });
-
-      if (response.status != 200) throw new Error("Failed to create goal");
-
-      const data = response.data;
-      navigate(`/goal-session`, {
-        state: { learningPath: data.learningPath },
-      });
-    } catch (err) {
-      console.error(err);
-      alert("Failed to create learning goal");
-    }
+    navigate(`/pre-knowledge-questionarrie`, {
+      state: { goal, days, hoursPerDay },
+    });
   };
 
   return (
@@ -60,7 +43,7 @@ const SetupGoal: React.FC = () => {
         className="bg-blue-600 text-white px-4 py-2 rounded"
         onClick={handleSubmit}
       >
-        Create Goal
+        Submit
       </button>
     </div>
   );
