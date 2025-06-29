@@ -10,6 +10,7 @@ import { checkValidationErrors } from "../middleware/validation.middleware";
 const authRouter = Router();
 authRouter.post(
   "/register",
+  [...validateUserName, ...validatePassword, checkValidationErrors],
   autController.register
 );
 

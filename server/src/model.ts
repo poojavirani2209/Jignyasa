@@ -18,10 +18,10 @@ User.init(
       allowNull: false,
       unique: true,
     },
-     password: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
+    password: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     sequelize,
@@ -32,11 +32,7 @@ User.init(
 class LearnerProfile extends Sequelize.Model {
   public id!: string;
   public userId!: string;
-  public learningStyle!: string;
-  public goal!: string;
-  public days!: number;
-  public hoursPerDay!: number;
-  public learningPath!: object;
+  public userDeclaredlearningStyle!: string;
 }
 
 LearnerProfile.init(
@@ -50,8 +46,35 @@ LearnerProfile.init(
       type: Sequelize.DataTypes.UUID,
       allowNull: false,
     },
-    learningStyle: {
+    userDeclaredlearningStyle: {
       type: Sequelize.DataTypes.STRING,
+      allowNull: true,
+    },
+  },
+  {
+    sequelize,
+    modelName: "LearnerProfile",
+  }
+);
+
+class LearnerGoal extends Sequelize.Model {
+  public id!: string;
+  public userId!: string;
+  public goal!: string;
+  public days!: number;
+  public hoursPerDay!: number;
+  public learningPath!: JSON;
+}
+
+LearnerGoal.init(
+  {
+    id: {
+      type: Sequelize.DataTypes.UUID,
+      defaultValue: Sequelize.DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    userId: {
+      type: Sequelize.DataTypes.UUID,
       allowNull: false,
     },
     goal: {
@@ -67,17 +90,20 @@ LearnerProfile.init(
       allowNull: false,
     },
     learningPath: {
-      type: Sequelize.DataTypes.JSONB,
+      type: Sequelize.DataTypes.JSON,
       allowNull: true,
     },
   },
   {
     sequelize,
-    modelName: "LearnerProfile",
+    modelName: "LearnerGoal",
   }
 );
 
 User.hasOne(LearnerProfile, { foreignKey: "userId", onDelete: "CASCADE" });
-LearnerProfile.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(LearnerGoal, { foreignKey: "userId", onDelete: "CASCADE" });
 
-export { sequelize, User, LearnerProfile };
+LearnerProfile.belongsTo(User, { foreignKey: "userId" });
+LearnerGoal.belongsTo(User, { foreignKey: "userId" });
+
+export { sequelize, User, LearnerProfile, LearnerGoal };

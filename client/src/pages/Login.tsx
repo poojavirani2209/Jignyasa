@@ -10,8 +10,12 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await api.post("/auth/login", { username, password });
-    localStorage.setItem("token", res.data.token);
-    navigate("/dashboard");
+    localStorage.setItem("token", res.data.accessToken);
+    if (!res.data.profile.userDeclaredlearningStyle) {
+      navigate("/learning-style");
+    } else {
+      navigate("/setup-goal");
+    }
   };
 
   return (

@@ -1,5 +1,6 @@
 import { body } from "express-validator";
 import { getUserByUserName } from "../models/user.models";
+import { verifyToken } from "../utils/jwt";
 
 export const validateUserName = [
   body("username")
@@ -28,5 +29,19 @@ export const checkExistingUser = async (req, res, next) => {
   } catch (error) {
     console.log(`No user exists with the provided name So can be registered.`);
     next();
+  }
+};
+
+export const authorize = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ error: "No token" });
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const payload: any = verifyToken(token);
+    req.userId = payload.userId;
+    next();
+  } catch {
+    res.status(401).json({ error: "Invalid token" });
   }
 };

@@ -10,8 +10,8 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await api.post("/auth/register", { username, password });
-    localStorage.setItem("token", res.data.token);
-    navigate("/setup");
+    localStorage.setItem("token", res.data.accessToken);
+    navigate("/learning-style");
   };
 
   return (

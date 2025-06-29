@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/axios": "^0.9.36",
     "@types/express-validator": "^3.0.2",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/supertest": "^6.0.3",
+    "axios": "^1.10.0",
     "bcryptjs": "^3.0.2",
     "body-parser": "^1.19.0",
     "clinic": "^13.0.0",

@@ -10,7 +10,6 @@ export const getUserByUserName = async (
     where: { username: userName },
     transaction,
   });
-  console.log(user)
   return user.dataValues;
 };
 
