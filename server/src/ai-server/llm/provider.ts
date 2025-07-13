@@ -1,4 +1,4 @@
-import { LearningPath } from "../types/goal";
+import { LearningPath } from "../../types/goal";
 
 export type LLMRole = "system" | "user" | "assistant";
 

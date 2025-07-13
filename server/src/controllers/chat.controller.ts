@@ -4,7 +4,7 @@ import * as chatServices from "../services/chat.services";
 import * as tutorServices from "../services/tutor.services";
 
 import { LearnerProfile } from "../types/profile";
-import { LLMMessage } from "../llm/provider";
+import { LLMMessage } from "../ai-server/llm/provider";
 
 export async function initiateChat(req: Request, res: Response) {
   const { subtopic, goalId } = req.body;
@@ -13,7 +13,7 @@ export async function initiateChat(req: Request, res: Response) {
     const learnerProfile: LearnerProfile =
       await profileServices.getProfileByUserId(userId);
     const learningStyle = learnerProfile.userDeclaredlearningStyle;
-    let messages: LLMMessage[] = await tutorServices.startTutoring(
+    let messages: LLMMessage[] = await tutorServices.startTutoring(goalId,
       subtopic,
       learningStyle
     );

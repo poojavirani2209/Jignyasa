@@ -1,4 +1,4 @@
-import { LLMMessage } from "../llm/provider";
+import { LLMMessage } from "../ai-server/llm/provider";
 
 export interface ChatHistoryMetaData {
   id: string;

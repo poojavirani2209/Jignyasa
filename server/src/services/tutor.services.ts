@@ -1,9 +1,9 @@
-import { NewLearnerGoal } from "../types/goal";
 import { LearningStyle } from "../types/profile";
-import * as LLM from "../llm";
-import { LLMMessage } from "../llm/provider";
+import * as LLM from "../ai-server/llm";
+import { LLMMessage } from "../ai-server/llm/provider";
 
 export const startTutoring = async (
+  goalId: string,
   subTopicName: string,
   learningStyle: LearningStyle
 ) => {
@@ -20,6 +20,11 @@ Preferred learning style: ${learningStyle}
     //   { role: "system", content: "You are a helpful learning assistant." },
     //   { role: "user", content: prompt },
     // ]);
+
+    let ragEngine = LLM.initRAG("tutor");
+
+    const result = await ragEngine.callWithRelevantContext(goalId, prompt);
+
     const response = {
       content: "Sure lets get started with the subtopic.",
     };

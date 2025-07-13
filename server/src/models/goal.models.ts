@@ -1,6 +1,5 @@
 import { Transaction } from "sequelize";
-import { LearnerGoal as LearnerGoalModel } from "../model";
-import { LearnerProfile } from "../types/profile";
+import { LearnerGoalDocs, LearnerGoal as LearnerGoalModel } from "../model";
 import { LearnerGoal, LearningPath, NewLearnerGoal } from "../types/goal";
 
 type LearnerGoalUpdate = Partial<Omit<LearnerGoal, "id">>;
@@ -8,7 +7,6 @@ type LearnerGoalUpdate = Partial<Omit<LearnerGoal, "id">>;
 export const createNewLearnerGoal = async (
   learnerGoal: NewLearnerGoal,
   userId: string,
-  learningPath: LearningPath,
   transaction?: Transaction
 ) => {
   const newGoal = await LearnerGoalModel.create(
@@ -17,11 +15,43 @@ export const createNewLearnerGoal = async (
       goal: learnerGoal.goal,
       days: learnerGoal.days,
       hoursPerDay: learnerGoal.hoursPerDay,
-      learningPath: learningPath,
+      learningPath: "",
     },
     { transaction }
   );
-  return newGoal;
+  return JSON.parse(JSON.stringify(newGoal)) as LearnerGoal;
 };
 
+export const updateLearnerGoal = async (
+  goalId: string,
+  learnerGoal: LearnerGoal,
+  learningPath: LearningPath,
+  transaction?: Transaction
+) => {
+  await LearnerGoalModel.update(
+    {
+      userId: learnerGoal.userId,
+      goal: learnerGoal.goal,
+      days: learnerGoal.days,
+      hoursPerDay: learnerGoal.hoursPerDay,
+      learningPath: learningPath,
+    },
+    { where: { id: goalId }, transaction }
+  );
+};
 
+export const addNewLearnerGoalDoc = async (
+  goalId: string,
+  file: any,
+  transaction?: Transaction
+) => {
+  const newGoalDoc = await LearnerGoalDocs.create(
+    {
+      goalId,
+      filename: file.originalname,
+      filepath: file.path,
+    },
+    { transaction }
+  );
+  return newGoalDoc;
+};

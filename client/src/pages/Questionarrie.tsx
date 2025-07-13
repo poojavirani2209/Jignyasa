@@ -12,7 +12,12 @@ interface Question {
 const Questionnaire: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { goal, days, hoursPerDay } = location.state;
+  const { goal, days, hoursPerDay, files } = location.state as {
+    goal: string;
+    days: number;
+    hoursPerDay: number;
+    files: FileList;
+  };
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<{ [id: string]: string }>({});
@@ -34,11 +39,20 @@ const Questionnaire: React.FC = () => {
     if (!token) return alert("Not logged in");
 
     try {
-      const response = await api.post("/goal", {
-        goal,
-        days,
-        hoursPerDay,
-        answers,
+      const formData = new FormData();
+      formData.append("goal", goal);
+      formData.append("days", String(days));
+      formData.append("hoursPerDay", String(hoursPerDay));
+      formData.append("answers", JSON.stringify(answers));
+      
+      if (files) {
+        Array.from(files).forEach((file) => {
+          formData.append("docs", file);
+        });
+      }
+
+      const response = await api.post("/goal", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (response.status != 200) throw new Error("Failed to create goal");

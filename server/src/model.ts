@@ -100,6 +100,39 @@ LearnerGoal.init(
   }
 );
 
+class LearnerGoalDocs extends Sequelize.Model {
+  public id!: string;
+  public goalId!: string;
+  public filename!: string;
+  public filepath!: string;
+}
+
+LearnerGoalDocs.init(
+  {
+    id: {
+      type: Sequelize.DataTypes.UUID,
+      defaultValue: Sequelize.DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    goalId: {
+      type: Sequelize.DataTypes.UUID,
+      allowNull: false,
+    },
+    filename: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: false,
+    },
+    filepath: {
+      type: Sequelize.DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize,
+    modelName: "LearnerGoalDocs",
+  }
+);
+
 class ChatHistory extends Sequelize.Model {}
 ChatHistory.init(
   {
@@ -124,10 +157,6 @@ ChatHistory.init(
       type: Sequelize.DataTypes.JSON,
       allowNull: false,
     },
-    lastUpdatedAt: {
-      type: Sequelize.DataTypes.DATE,
-      defaultValue: Sequelize.NOW,
-    },
   },
   {
     sequelize,
@@ -141,4 +170,11 @@ User.hasMany(LearnerGoal, { foreignKey: "userId", onDelete: "CASCADE" });
 LearnerProfile.belongsTo(User, { foreignKey: "userId" });
 LearnerGoal.belongsTo(User, { foreignKey: "userId" });
 
-export { sequelize, User, LearnerProfile, LearnerGoal, ChatHistory };
+export {
+  sequelize,
+  User,
+  LearnerProfile,
+  LearnerGoal,
+  ChatHistory,
+  LearnerGoalDocs,
+};

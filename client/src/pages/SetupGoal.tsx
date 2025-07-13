@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api";
+import { UploadDocs } from "./UploadDocs";
 
 const SetupGoal: React.FC = () => {
   const [goal, setGoal] = useState("");
   const [days, setDays] = useState<number>(30);
   const [hoursPerDay, setHoursPerDay] = useState<number>(1);
+  const [files, setFiles] = useState<FileList | null>(null);
 
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
     navigate(`/pre-knowledge-questionarrie`, {
-      state: { goal, days, hoursPerDay },
+      state: { goal, days, hoursPerDay, files },
     });
   };
 
@@ -39,6 +40,7 @@ const SetupGoal: React.FC = () => {
         value={hoursPerDay}
         onChange={(e) => setHoursPerDay(Number(e.target.value))}
       />
+      <UploadDocs files={files} setFiles={setFiles}></UploadDocs>
       <button
         className="bg-blue-600 text-white px-4 py-2 rounded"
         onClick={handleSubmit}

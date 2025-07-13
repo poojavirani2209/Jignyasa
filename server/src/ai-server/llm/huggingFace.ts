@@ -1,6 +1,5 @@
 import axios from "axios";
 import { LLMMessage, LLMProvider, LLMResponse } from "./provider";
-import { LearningPath } from "../types/goal";
 
 export class HuggingFaceProvider implements LLMProvider {
   private apiKey: string;
@@ -26,6 +25,10 @@ export class HuggingFaceProvider implements LLMProvider {
 
     const content = res.data?.[0]?.generated_text;
     return { content };
+  }
+
+  async getModel() {
+    return this.model;
   }
 }
 

@@ -4,26 +4,38 @@ import * as domainServices from "../services/domain.service";
 import * as goalServices from "../services/goal.services";
 
 import { LearnerProfile } from "../types/profile";
-import { LearningPath, Question } from "../types/goal";
+import { LearnerGoal, LearningPath, Question } from "../types/goal";
 
 export const createNewGoal = async (req: Request, res: Response) => {
   const { goal, days, hoursPerDay } = req.body;
+  console.log("Gaol body" + goal);
+
   const userId = (req as any).userId;
+  const files = req.files as Express.Multer.File[];
+
   try {
     const learnerProfile: LearnerProfile =
       await profileServices.getProfileByUserId(userId);
     const learningStyle = learnerProfile.userDeclaredlearningStyle;
 
-    let learningPath: LearningPath = (await domainServices.createPlan(
+    const newGoal: LearnerGoal = await goalServices.createNewGoal(
       { goal, days, hoursPerDay },
+      (req as any).userId
+    );
+
+    let learningPath: LearningPath = (await domainServices.createPlan(
+      newGoal,
+      files,
       learningStyle
     )) as LearningPath;
 
-    const newGoal = await goalServices.createNewGoal(
-      { goal, days, hoursPerDay },
-      (req as any).userId,
+    await goalServices.updateGoal(
+      newGoal.id,
+      { id: newGoal.id, userId, goal, days, hoursPerDay, learningPath },
       learningPath
     );
+
+    await goalServices.addGoalDocs(newGoal.id, files);
 
     res.status(200).json({ goalId: newGoal.id, learningPath });
   } catch (error) {

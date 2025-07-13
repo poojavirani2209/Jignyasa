@@ -1,13 +1,21 @@
-import { LearningPath, NewLearnerGoal, Question } from "../types/goal";
+import {
+  LearningPath,
+  LearnerGoal,
+  Question,
+  NewLearnerGoal,
+} from "../types/goal";
 import { LearningStyle } from "../types/profile";
-import * as LLM from "../llm";
+import * as LLM from "../ai-server/llm";
 
 export const createPlan = async (
-  learnerGoal: NewLearnerGoal,
+  learnerGoal: LearnerGoal,
+  files: any,
   learningStyle: LearningStyle
 ) => {
   try {
-    const { goal, days, hoursPerDay } = learnerGoal;
+    const { id, goal, days, hoursPerDay } = learnerGoal;
+    const filePaths = files.map((f) => f.path);
+
     const prompt = `
 You're an expert learning path designer.
 
@@ -43,12 +51,16 @@ Respond in this exact JSON format:
 Only return valid JSON.
 `;
 
-    LLM.initLLM("domain");
+    //  LLM.initLLM("domain");
 
-    // const response = await LLM.callLLM([
-    //   { role: "system", content: "You are a helpful learning assistant." },
-    //   { role: "user", content: prompt },
-    // ]);
+    // // const response = await LLM.callLLM([
+    // //   { role: "system", content: "You are a helpful learning assistant." },
+    // //   { role: "user", content: prompt },
+    // // ]);
+
+    let ragEngine = LLM.initRAG("domain");
+
+    const result = await ragEngine.callWithEntireContext(id, filePaths, prompt);
 
     const content: LearningPath = {
       topics: [
@@ -188,7 +200,6 @@ Only return valid JSON.
     let response = { content };
 
     try {
-      console.log("LLM Response" + JSON.stringify(response.content));
       return response.content;
     } catch (err) {
       console.error("Failed to parse learning path JSON:", response.content);
@@ -215,6 +226,7 @@ function styleToFormat(style: string): string {
   }
 }
 
+//TODO RAG?
 export const createPreKnowledgeQuestionarrie = async (
   learnerGoal: NewLearnerGoal,
   learningStyle: LearningStyle
