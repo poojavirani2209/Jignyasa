@@ -187,6 +187,49 @@ InteractionLog.init(
   }
 );
 
+class EmotionLog extends Sequelize.Model {}
+EmotionLog.init(
+  {
+    id: {
+      type: Sequelize.DataTypes.UUID,
+      defaultValue: Sequelize.DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    userId: {
+      type: Sequelize.DataTypes.UUID,
+      allowNull: false,
+    },
+    goalId: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: false,
+    },
+    subTopicName: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: false,
+    },
+    imagePath: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: false,
+    },
+    timestamp: {
+      type: Sequelize.DataTypes.DATE,
+      allowNull: false,
+    },
+    emotion: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: false,
+    },
+    confidence: {
+      type: Sequelize.DataTypes.NUMBER,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize,
+    modelName: "EmotionLog",
+  }
+);
+
 class ChatHistory extends Sequelize.Model {}
 ChatHistory.init(
   {
@@ -232,4 +275,5 @@ export {
   ChatHistory,
   LearnerGoalDocs,
   InteractionLog,
+  EmotionLog
 };

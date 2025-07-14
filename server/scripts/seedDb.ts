@@ -5,6 +5,7 @@ import {
   ChatHistory,
   LearnerGoalDocs,
   InteractionLog,
+  EmotionLog,
 } from "../src/model";
 
 /* WARNING THIS WILL DROP THE CURRENT DATABASE */
@@ -18,6 +19,8 @@ async function seed() {
   await ChatHistory.sync({ force: true });
   await LearnerGoalDocs.sync({ force: true });
   await InteractionLog.sync({ force: true });
+  await EmotionLog.sync({ force: true });
+
   //insert data
   await User.create({
     id: 1,

@@ -14,3 +14,8 @@ export interface LLMResponse {
 export interface LLMProvider {
   chat(messages: LLMMessage[]): Promise<LLMResponse>;
 }
+
+export interface VLMProvider {
+  chat(messages: LLMMessage[], imagePath:string): Promise<LLMResponse>;
+}
+

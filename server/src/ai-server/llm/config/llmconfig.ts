@@ -9,6 +9,6 @@ export const getLLMConfig = () => ({
   },
   analyzer: {
     apiKey: process.env.DOMAIN_AGENT_API_KEY!,
-    model: "HuggingFaceH4/zephyr-7b-beta",
+    model: "HuggingFaceH4/zephyr-7b-beta",//gpt4-0
   },
 });

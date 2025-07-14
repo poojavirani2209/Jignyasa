@@ -22,9 +22,9 @@ Preferred learning style: ${learningStyle}
     //   { role: "user", content: prompt },
     // ]);
 
-    let ragEngine = LLM.initRAG("tutor");
+    // let ragEngine = LLM.initRAG("tutor");
 
-    const result = await ragEngine.callWithRelevantContext(goalId, prompt);
+    // const result = await ragEngine.callWithRelevantContext(goalId, prompt);
 
     const response = {
       content: "Sure lets get started with the subtopic.",

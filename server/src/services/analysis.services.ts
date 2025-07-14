@@ -1,4 +1,3 @@
-import * as LLM from "../ai-server/llm";
 import { LLMMessage } from "../ai-server/llm/provider";
 import * as goalServices from "../services/goal.services";
 import { LearnerGoal } from "../types/goal";
@@ -21,6 +20,12 @@ export const analyzeSubTopicSession = async (
     );
 
     let interactionLogs = await logServices.fetchInteractionLogs(
+      userId,
+      goalId,
+      subTopicName
+    );
+
+    let emotionLogs = await logServices.fetchEmotionLogs(
       userId,
       goalId,
       subTopicName
@@ -50,6 +55,10 @@ ${JSON.stringify(quizPerformance)}
 Interaction Logs:
 (Includes time spent, completed status, and type of resource: video, article, TTS)
 ${JSON.stringify(interactionLogs, null, 2)}
+
+Emotion Logs:
+(Includes timestamp, emotion at the moment, confidence in emotion)
+${JSON.stringify(emotionLogs, null, 2)}
 
 Respond in strict JSON format:
 {
@@ -82,13 +91,12 @@ Respond in strict JSON format:
       },
       mostLikelyVARK: "Kinesthetic",
       tutorFeedback: {
-        whatWentWell:
-          "The learner asked thoughtful questions and used TTS consistently.",
+        whatWentWell: "The learner asked thoughtful questions consistently.",
         whatToImprove:
           "The learner should engage more with reading materials and clarify doubts earlier.",
       },
       recommendations:
-        "Use more auditory explanations and follow up with quiz-based reinforcement. Avoid overloading with long articles.",
+        "Use more auditory explanations and follow up with quiz-based reinforcement. Avoid overloading with long articles. Try project based learning.",
     };
     let response = { content };
 
@@ -100,6 +108,53 @@ Respond in strict JSON format:
     }
   } catch (error) {
     console.error("Failed to analyze subtopic session", error);
+    throw error;
+  }
+};
+
+export const analyzeEmotion = async (imagePath: string) => {
+  try {
+    const prompt = `You're an expert at reading emotions from images.
+
+Given this image of a person using a learning app, classify the user's emotion into one of:
+- Interested
+- Frustrated
+- Bored
+
+Also provide a confidence score from 0 to 1.
+
+Respond in JSON like:
+{
+  "emotion": "Frustrated",
+  "confidence": 0.78
+}
+`;
+
+    // let vlm = LLM.initVLM("analyzer");
+    // vlm.chat(
+    //   [
+    //     {
+    //       role: "assistant",
+    //       content: prompt,
+    //     },
+    //   ],
+    //   imagePath
+    // );
+
+    const content = {
+      emotion: "Frustrated",
+      confidence: 0.78,
+    };
+    let response = { content };
+
+    try {
+      console.log("LLM Response" + JSON.stringify(response.content));
+      return response.content;
+    } catch (err) {
+      throw new Error("Invalid LLM response");
+    }
+  } catch (error) {
+    console.error("Failed to analyze emotion from image", error);
     throw error;
   }
 };

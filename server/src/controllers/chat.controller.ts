@@ -10,7 +10,7 @@ import { LLMMessage } from "../ai-server/llm/provider";
 import { LearnerGoal } from "../types/goal";
 
 export async function initiateChat(req: Request, res: Response) {
-  const { subtopic, goalId } = req.body;
+  const { subTopicName, goalId } = req.body;
   const userId = (req as any).userId;
   try {
     const learnerProfile: LearnerProfile =
@@ -18,10 +18,10 @@ export async function initiateChat(req: Request, res: Response) {
     const learningStyle = learnerProfile.userDeclaredlearningStyle;
     let messages: LLMMessage[] = await tutorServices.startTutoring(
       goalId,
-      subtopic,
+      subTopicName,
       learningStyle
     );
-    await chatServices.createNewChat(subtopic, goalId, userId, messages);
+    await chatServices.createNewChat(subTopicName, goalId, userId, messages);
     res.status(200).json({ messages });
   } catch (error) {
     res.status(error.statusCode || 500).json({

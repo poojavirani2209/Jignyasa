@@ -12,8 +12,8 @@ export interface LLMMessage {
 const Chat: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { subtopicName, goalId } = location.state as {
-    subtopicName: string;
+  const { subTopicName, goalId } = location.state as {
+    subTopicName: string;
     goalId: string;
   };
   const [messages, setMessages] = useState<LLMMessage[]>([]);
@@ -26,7 +26,7 @@ const Chat: React.FC = () => {
   const fetchInitialMessage = async () => {
     try {
       const res = await api.post("/chat/initiate", {
-        subtopic: subtopicName,
+        subTopicName: subTopicName,
         goalId,
       });
       setMessages(res.data.messages);
@@ -36,7 +36,7 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     fetchInitialMessage();
-  }, [subtopicName]);
+  }, [subTopicName]);
 
   const sendMessage = async () => {
     const newMessages: LLMMessage[] = [
@@ -48,7 +48,7 @@ const Chat: React.FC = () => {
     try {
       const res = await api.post("/chat/message", {
         messages: newMessages,
-        subtopic: subtopicName,
+        subtopic: subTopicName,
         goalId,
       });
       setMessages(res.data.newMessages);
@@ -84,14 +84,14 @@ const Chat: React.FC = () => {
           replayCount: playCount + 1,
           method: "tts",
         }),
-        subTopicName: subtopicName,
+        subTopicName: subTopicName,
       });
     });
   }
   return (
-    <div className="fixed top-10 right-10 bottom-10 w-[400px] bg-white shadow-lg border p-4 z-50 flex flex-col">
+    <div className="fixed top-10 left-[450px] right-10 bottom-10 w-[400px] h-[600px] bg-white shadow-lg border p-4 z-50 flex flex-col">
       <div className="flex justify-between mb-2">
-        <h3 className="text-lg font-bold">🧑‍🏫 Tutor: {subtopicName}</h3>
+        <h3 className="text-lg font-bold">🧑‍🏫 Tutor: {subTopicName}</h3>
         <button
           onClick={() => {
             navigate(-1);

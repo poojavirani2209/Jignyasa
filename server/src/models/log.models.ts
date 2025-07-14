@@ -1,9 +1,9 @@
 import { Transaction } from "sequelize";
-import { InteractionLog } from "../model";
-import { NewInterationLog } from "../types/log";
+import { EmotionLog, InteractionLog } from "../model";
+import * as LogTypes from "../types/log";
 
 export const captureInteractionLog = async (
-  newLog: NewInterationLog,
+  newLog: LogTypes.NewInterationLog,
   userId: string,
   transaction?: Transaction
 ) => {
@@ -28,4 +28,34 @@ export const fetchInteractionLogs = async (
     transaction,
   })) as unknown as InteractionLog[];
   return interactionLogs;
+};
+
+export const captureEmotionLog = async (
+  newLog: LogTypes.NewEmotionLog,
+  userId: string,
+  emotion: string,
+  confidence: number,
+  transaction?: Transaction
+) => {
+  const emotionLog = await EmotionLog.create(
+    { ...newLog, userId, emotion, confidence },
+    { transaction }
+  );
+};
+
+export const fetchEmotionLogs = async (
+  userId: string,
+  goalId: string,
+  subTopicName: string,
+  transaction?: Transaction
+) => {
+  const emotionLogs = (await EmotionLog.findAll({
+    where: {
+      goalId,
+      userId,
+      subTopicName,
+    },
+    transaction,
+  })) as unknown as LogTypes.EmotionLog[];
+  return emotionLogs;
 };
