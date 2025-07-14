@@ -1,6 +1,6 @@
 import { NotFoundError } from "../errors/api-errors";
 import * as profileModels from "../models/profile.models";
-import { LearningStyle } from "../types/profile";
+import { LearnerProfile, LearningStyle } from "../types/profile";
 
 export const getProfileByUserId = async (userId: string) => {
   try {
@@ -29,12 +29,10 @@ export const getProfileByUserId = async (userId: string) => {
 
 export const updateLearningStyleOfProfileByUserId = async (
   userId: string,
-  userDeclaredlearningStyle: LearningStyle
+  learnerProfile: Partial<LearnerProfile>
 ) => {
   try {
-    let newProfile = await profileModels.updateProfileByUserId(userId, {
-      userDeclaredlearningStyle,
-    });
+    let newProfile = await profileModels.updateProfileByUserId(userId, learnerProfile);
 
     return newProfile;
   } catch (error) {

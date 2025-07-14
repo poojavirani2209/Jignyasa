@@ -18,6 +18,10 @@ const Chat: React.FC = () => {
   };
   const [messages, setMessages] = useState<LLMMessage[]>([]);
   const [input, setInput] = useState("");
+  const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+
+  const [playCount, setPlayCount] = useState(0);
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   const fetchInitialMessage = async () => {
     try {
@@ -52,6 +56,38 @@ const Chat: React.FC = () => {
     }
   };
 
+  const playTTS = (text: string, index: number, onEnd: () => void) => {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.onstart = () => setPlayingIndex(index);
+    utterance.onend = () => {
+      setPlayingIndex(null);
+      onEnd();
+    };
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  function handleAudio(text: string, index: number) {
+    setStartTime(Date.now());
+    setPlayCount((c) => c + 1);
+    playTTS(text, index, async () => {
+      const timeSpent = Date.now() - (startTime || Date.now());
+      const res = await api.post("/log/interaction", {
+        goalId,
+        contentType: "tutor-audio",
+        timeSpentSeconds: Math.floor(timeSpent / 1000),
+        interactionDetails: JSON.stringify({
+          replayCount: playCount + 1,
+          method: "tts",
+        }),
+        subTopicName: subtopicName,
+      });
+    });
+  }
   return (
     <div className="fixed top-10 right-10 bottom-10 w-[400px] bg-white shadow-lg border p-4 z-50 flex flex-col">
       <div className="flex justify-between mb-2">
@@ -75,7 +111,15 @@ const Chat: React.FC = () => {
                 : "bg-gray-100 text-left"
             }`}
           >
-            {msg.content}
+            <div>{msg.content}</div>
+            {msg.role === "assistant" && (
+              <button
+                className="absolute top-1 right-1 text-sm text-blue-500"
+                onClick={() => handleAudio(msg.content, i)}
+              >
+                {playingIndex === i ? "🔊 Playing..." : "🔊 Listen"}
+              </button>
+            )}
           </div>
         ))}
       </div>

@@ -8,10 +8,9 @@ export const setUserDefinedLearningStyle = async (
   const userId = (req as any).userId;
   const { learningStyle } = req.body;
   try {
-    await profileServices.updateLearningStyleOfProfileByUserId(
-      userId,
-      learningStyle
-    );
+    await profileServices.updateLearningStyleOfProfileByUserId(userId, {
+      userDeclaredlearningStyle: learningStyle,
+    });
     res
       .status(200)
       .json({ message: "Updated user defined learning style successfully." });

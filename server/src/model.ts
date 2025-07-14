@@ -33,6 +33,9 @@ class LearnerProfile extends Sequelize.Model {
   public id!: string;
   public userId!: string;
   public userDeclaredlearningStyle!: string;
+  public adaptiveLearningStyle: string;
+  public retentionRate: number;
+  public tutorFeedbackSummary: string;
 }
 
 LearnerProfile.init(
@@ -47,6 +50,18 @@ LearnerProfile.init(
       allowNull: false,
     },
     userDeclaredlearningStyle: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: true,
+    },
+    adaptiveLearningStyle: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: true,
+    },
+    retentionRate: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: true,
+    },
+    tutorFeedbackSummary: {
       type: Sequelize.DataTypes.STRING,
       allowNull: true,
     },
@@ -133,6 +148,45 @@ LearnerGoalDocs.init(
   }
 );
 
+class InteractionLog extends Sequelize.Model {}
+InteractionLog.init(
+  {
+    id: {
+      type: Sequelize.DataTypes.UUID,
+      defaultValue: Sequelize.DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    userId: {
+      type: Sequelize.DataTypes.UUID,
+      allowNull: false,
+    },
+    goalId: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: false,
+    },
+    subTopicName: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: false,
+    },
+    contentType: {
+      type: Sequelize.DataTypes.STRING,
+      allowNull: false,
+    },
+    timeSpentSeconds: {
+      type: Sequelize.DataTypes.NUMBER,
+      allowNull: false,
+    },
+    interactionDetails: {
+      type: Sequelize.DataTypes.JSON,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize,
+    modelName: "InteractionLog",
+  }
+);
+
 class ChatHistory extends Sequelize.Model {}
 ChatHistory.init(
   {
@@ -177,4 +231,5 @@ export {
   LearnerGoal,
   ChatHistory,
   LearnerGoalDocs,
+  InteractionLog,
 };

@@ -8,3 +8,15 @@ export interface ChatHistoryMetaData {
   messages: LLMMessage[];
   lastUpdatedAt: Date;
 }
+
+export interface Question {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswerOption: number;
+}
+
+export interface QuizPerformance {
+  questions: Question[];
+  answers: string[];
+}

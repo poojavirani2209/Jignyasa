@@ -2,6 +2,9 @@ export interface LearnerProfile {
   id: string;
   userId: string;
   userDeclaredlearningStyle: LearningStyle;
+  adaptiveLearningStyle: LearningStyle;
+  retentionRate: number;
+  tutorFeedbackSummary: string;
 }
 
 export enum LearningStyle {

@@ -1,2 +1,2 @@
 //TODO better space
-type AgentType = "domain" | "tutor";
+type AgentType = "domain" | "tutor" | "analyzer";

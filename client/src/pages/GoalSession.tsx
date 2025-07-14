@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import api from "../services/api";
 
 export interface LearningPath {
   topics: Topic[];
@@ -30,6 +31,13 @@ const GoalSession: React.FC = () => {
   const [selectedTopicIdx, setSelectedTopicIdx] = useState(0);
   const [selectedSubIdx, setSelectedSubIdx] = useState(0);
 
+  const [interactionTimers, setInteractionTimers] = useState<
+    Record<string, number>
+  >({});
+  const [completedResources, setCompletedResources] = useState<Set<string>>(
+    new Set()
+  );
+
   const selectedSubTopic =
     learningPath.topics[selectedTopicIdx]?.subtopics[selectedSubIdx];
 
@@ -38,6 +46,53 @@ const GoalSession: React.FC = () => {
       state: {
         subtopicName: selectedSubTopic?.name,
         goalId: goalId,
+      },
+    });
+  };
+
+  const handleStartInteraction = (url: string) => {
+    setInteractionTimers((prev) => ({
+      ...prev,
+      [url]: Date.now(),
+    }));
+  };
+
+  const handleCompleteInteraction = async (
+    url: string,
+    contentType: "article" | "video"
+  ) => {
+    const startedAt = interactionTimers[url];
+    if (!startedAt) return;
+
+    const timeSpentSeconds = Math.floor((Date.now() - startedAt) / 1000);
+    const subTopicName = selectedSubTopic?.name || "";
+
+    const res = await api.post("/log/interaction", {
+      goalId,
+      contentType,
+      timeSpentSeconds,
+      interactionDetails: "",
+      subTopicName,
+    });
+
+    setCompletedResources((prev) => new Set(prev).add(url));
+  };
+
+  const handleSubtopicComplete = async () => {
+    const subTopicName = selectedSubTopic?.name;
+
+    // // 1. Capture completion log
+    // await api.post("/api/log/complete-subtopic", {
+    //   goalId,
+    //   subtopicName,
+    //   timestamp: new Date().toISOString(),
+    // });
+
+    navigate("/quiz", {
+      state: {
+        goalId,
+        subTopicName,
+        learningPath
       },
     });
   };
@@ -78,6 +133,15 @@ const GoalSession: React.FC = () => {
         <div className="p-4 border-b bg-white shadow-sm">
           <h2 className="text-xl font-bold text-gray-800">
             {selectedSubTopic?.name}
+
+            {
+              <button
+                onClick={() => handleSubtopicComplete()}
+                className="text-sm text-green-600 underline"
+              >
+                ✅ Mark Subtopic as Completed & Take Quiz
+              </button>
+            }
           </h2>
         </div>
 
@@ -99,47 +163,83 @@ const GoalSession: React.FC = () => {
             {/* Articles */}
             <div className="mb-6">
               <h4 className="text-md font-semibold mb-2">📄 Articles</h4>
-              {selectedSubTopic?.articles.map((a, i) =>
-                a.type === "pdf" ? (
-                  <iframe
-                    key={i}
-                    src={a.url}
-                    width="100%"
-                    height="300px"
-                    className="mb-4 border"
-                    title={a.title}
-                  />
-                ) : (
-                  <a
-                    key={i}
-                    href={a.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block text-blue-600 underline mb-2"
-                  >
-                    {a.title}
-                  </a>
-                )
-              )}
+              {selectedSubTopic?.articles.map((a, i) => {
+                const isCompleted = completedResources.has(a.url);
+                return (
+                  <div>
+                    <iframe
+                      key={i}
+                      src={a.url}
+                      width="100%"
+                      height="300px"
+                      className="mb-4 border"
+                      title={a.title}
+                    />
+                    <div>
+                      If article did not render here, please click:
+                      <a
+                        href={a.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block text-blue-600 underline mb-1"
+                        onClick={() => handleStartInteraction(a.url)}
+                      >
+                        {a.title}
+                      </a>
+                    </div>
+
+                    {!isCompleted ? (
+                      <button
+                        onClick={() =>
+                          handleCompleteInteraction(a.url, "article")
+                        }
+                        className="text-sm text-green-600 underline"
+                      >
+                        ✅ Mark as Completed
+                      </button>
+                    ) : (
+                      <div className="text-sm text-green-700">✔️ Completed</div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Videos */}
             <div>
               <h4 className="text-md font-semibold mb-2">🎥 Videos</h4>
-              {selectedSubTopic?.videos.map((v, i) => (
-                <div key={i} className="mb-4">
-                  <p className="mb-1">{v.title}</p>
-                  <iframe
-                    src={v.url}
-                    width="100%"
-                    height="240"
-                    title={v.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="rounded border"
-                  />
-                </div>
-              ))}
+              {selectedSubTopic?.videos.map((v, i) => {
+                const isCompleted = completedResources.has(v.url);
+
+                return (
+                  <div key={i} className="mb-4">
+                    <div>
+                      <a
+                        href={v.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block text-blue-600 underline mb-1"
+                        onClick={() => handleStartInteraction(v.url)}
+                      >
+                        {v.title}
+                      </a>
+                    </div>
+
+                    {!isCompleted ? (
+                      <button
+                        onClick={() =>
+                          handleCompleteInteraction(v.url, "video")
+                        }
+                        className="text-sm text-green-600 underline"
+                      >
+                        ✅ Mark as Completed
+                      </button>
+                    ) : (
+                      <div className="text-sm text-green-700">✔️ Completed</div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

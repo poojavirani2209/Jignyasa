@@ -7,6 +7,8 @@ import LearningStyle from "./pages/LearningStyle";
 import Home from "./pages/Home";
 import Chat from "./pages/Chat";
 import Questionnaire from "./pages/Questionarrie";
+import Quiz from "./pages/Quiz";
+import Dashboard from "./pages/DashBoard";
 
 const App = () => {
   return (
@@ -22,6 +24,14 @@ const App = () => {
         <Route
           path="/pre-knowledge-questionarrie"
           element={<Questionnaire />}
+        />
+         <Route
+          path="/quiz"
+          element={<Quiz />}
+        />
+         <Route
+          path="/dashboard"
+          element={<Dashboard />}
         />
       </Routes>
     </BrowserRouter>

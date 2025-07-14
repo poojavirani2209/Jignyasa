@@ -56,3 +56,29 @@ export const updateChat = async (
     );
   }
 };
+
+export const fetchChatHistory = async (
+  subTopicName: string,
+  goalId: string,
+  userId: string,
+) => {
+  try {
+    let chatHistory:LLMMessage[] = await chatModels.fetchChatHistory(
+      subTopicName,
+      goalId,
+      userId,
+    );
+
+    return chatHistory;
+  } catch (error) {
+    console.error(
+      `Error occurred while creating new chat for profile for user id ${userId}.`,
+      error
+    );
+
+    throw new Error(
+      `Error occurred while creating new chat for profile for user id ${userId}. ` +
+        error
+    );
+  }
+};

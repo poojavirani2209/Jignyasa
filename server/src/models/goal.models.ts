@@ -55,3 +55,13 @@ export const addNewLearnerGoalDoc = async (
   );
   return newGoalDoc;
 };
+
+export const fetchGoal = async (goalId: string, transaction?: Transaction) => {
+  const goal = await LearnerGoalModel.findOne({
+    where: {
+      id:goalId,
+    },
+    transaction,
+  });
+  return JSON.parse(JSON.stringify(goal)) as LearnerGoal;
+};

@@ -40,3 +40,20 @@ export const updateChatForSubTopicForUserId = async (
     transaction,
   });
 };
+
+export const fetchChatHistory = async (
+  subTopicName: string,
+  goalId: string,
+  userId: string,
+  transaction?: Transaction
+) => {
+  const chatHistory = await ChatHistory.findAll({
+    where: {
+      userId,
+      goalId,
+      subTopicName,
+    },
+    transaction,
+  }) as unknown as  LLMMessage[];
+  return chatHistory;
+};

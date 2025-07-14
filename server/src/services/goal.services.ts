@@ -60,3 +60,16 @@ export const addGoalDocs = async (goalId: string, files: any) => {
     );
   }
 };
+
+export const fetchGoal = async (goalId: string) => {
+  try {
+    let goal: LearnerGoal = await goalModels.fetchGoal(goalId);
+    return goal;
+  } catch (error) {
+    console.error(`Error occurred while fetching goal with ${goalId}.`, error);
+
+    throw new Error(
+      `Error occurred while fetching goal with ${goalId}.` + error
+    );
+  }
+};
