@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import * as analysisServices from "../services/analysis.services";
 import * as profileServices from "../services/profile.services";
+import { LearningStyle } from "../types/profile";
 
 export const analyzeSubTopicSession = async (req: Request, res: Response) => {
   const { quizPerformance, goalId, subTopicName } = req.body;
@@ -20,6 +21,7 @@ export const analyzeSubTopicSession = async (req: Request, res: Response) => {
         whatWentWell: response.tutorFeedback.whatWentWell,
         whatToImprove: response.tutorFeedback.whatToImprove,
       }),
+      adaptiveLearningStyle:response.mostLikelyVARK as LearningStyle
     }); //TODO vark scores
 
     res.status(200).json(response);

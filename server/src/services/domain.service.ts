@@ -58,9 +58,9 @@ Only return valid JSON.
     // //   { role: "user", content: prompt },
     // // ]);
 
-    let ragEngine = LLM.initRAG("domain");
+    // let ragEngine = LLM.initRAG("domain");
 
-    const result = await ragEngine.callWithEntireContext(id, filePaths, prompt);
+    // const result = await ragEngine.callWithEntireContext(id, filePaths, prompt);
 
     const content: LearningPath = {
       topics: [
@@ -127,6 +127,31 @@ Only return valid JSON.
                 {
                   title: "Using nodejs REPL",
                   url: "https://www.youtube.com/watch?v=VWfOEQSqgw0",
+                },
+              ],
+            },
+            {
+              name: "Nodejs Event Loop",
+              articles: [
+                {
+                  title: "Understanding the Node.js Event Loop",
+                  url: "https://nodejs.dev/en/learn/the-nodejs-event-loop/",
+                  type: "html",
+                },
+                {
+                  title: "Event Loop Explained with Diagrams",
+                  url: "https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif",
+                  type: "html",
+                },
+              ],
+              videos: [
+                {
+                  title: "Node.js Event Loop Visualized",
+                  url: "https://www.youtube.com/watch?v=8aGhZQkoFbQ",
+                },
+                {
+                  title: "What is the Event Loop in Node.js?",
+                  url: "https://www.youtube.com/watch?v=PNa9OMajw9w",
                 },
               ],
             },
@@ -197,6 +222,7 @@ Only return valid JSON.
         },
       ],
     };
+
     let response = { content };
 
     try {
@@ -237,7 +263,7 @@ export const createPreKnowledgeQuestionarrie = async (
 You're a smart course planner. The user wants to learn "${goal}" in ${days} days with ${hoursPerDay} hours/day. 
 Preferred learning style: ${learningStyle}. 
 
-Generate 3-5 personalized multiple-choice that help understand the learner's background and preferences.
+Generate 3-5 personalized multiple-choice that help understand the learner's pre knowledge about the goal.
 
 Respond in JSON like:
 [
@@ -263,7 +289,7 @@ Respond in JSON like:
 Only return valid JSON.
 `;
 
-    LLM.initLLM("domain");
+    // LLM.initLLM("domain");
 
     // const response = await LLM.callLLM([
     //   { role: "system", content: "You are a helpful learning assistant." },
@@ -279,17 +305,37 @@ Only return valid JSON.
       },
       {
         id: "q2",
-        question: "Do you have any experience with Nodejs?",
+        question: "Do you have any experience with Node.js?",
         type: "multiple-choice",
         options: ["None", "Basic", "Intermediate", "Expert"],
       },
       {
         id: "q3",
-        question: "Is nodejs single threaded?",
+        question: "Is Node.js single-threaded?",
         type: "multiple-choice",
-        options: ["yes", "No", "Unknown"],
+        options: ["Yes", "No", "Unknown"],
+      },
+      {
+        id: "q4",
+        question:
+          "Have you ever worked with backend technologies like Express.js, MongoDB, or REST APIs?",
+        type: "multiple-choice",
+        options: ["None", "Some experience", "Comfortable", "Advanced"],
+      },
+      {
+        id: "q5",
+        question:
+          "Which of the following best describes your understanding of asynchronous programming in JavaScript?",
+        type: "multiple-choice",
+        options: [
+          "Never heard of it",
+          "Heard of callbacks",
+          "Understand promises",
+          "Comfortable with async/await",
+        ],
       },
     ];
+
     let response = { content };
 
     try {

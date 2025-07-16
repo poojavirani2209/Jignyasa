@@ -15,11 +15,11 @@ export async function initiateChat(req: Request, res: Response) {
   try {
     const learnerProfile: LearnerProfile =
       await profileServices.getProfileByUserId(userId);
-    const learningStyle = learnerProfile.userDeclaredlearningStyle;
     let messages: LLMMessage[] = await tutorServices.startTutoring(
       goalId,
       subTopicName,
-      learningStyle
+      learnerProfile.userDeclaredlearningStyle,
+      learnerProfile.adaptiveLearningStyle
     );
     await chatServices.createNewChat(subTopicName, goalId, userId, messages);
     res.status(200).json({ messages });

@@ -89,14 +89,15 @@ Respond in strict JSON format:
         reading: 0.3,
         kinesthetic: 0.2,
       },
-      mostLikelyVARK: "Kinesthetic",
+      mostLikelyVARK: "auditory",
       tutorFeedback: {
-        whatWentWell: "The learner asked thoughtful questions consistently.",
+        whatWentWell:
+          "The learner actively engaged with the audio tutor sessions and interacted well with the article-based materials.",
         whatToImprove:
-          "The learner should engage more with reading materials and clarify doubts earlier.",
+          "The learner should consider diversifying input by occasionally reviewing visual content like diagrams or short animations, and clarifying doubts earlier for better concept retention.",
       },
       recommendations:
-        "Use more auditory explanations and follow up with quiz-based reinforcement. Avoid overloading with long articles. Try project based learning.",
+        "Use more auditory explanations and follow up with quiz-based reinforcement. Avoid overloading with long articles. Try project-based learning to apply concepts in real-world ways and keep engagement high.",
     };
     let response = { content };
 

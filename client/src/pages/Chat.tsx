@@ -71,6 +71,13 @@ const Chat: React.FC = () => {
     window.speechSynthesis.speak(utterance);
   };
 
+  const stopTTS = () => {
+    if (window.speechSynthesis.speaking) {
+      setPlayingIndex(null);
+      window.speechSynthesis.cancel();
+    }
+  };
+
   function handleAudio(text: string, index: number) {
     setStartTime(Date.now());
     setPlayCount((c) => c + 1);
@@ -113,12 +120,20 @@ const Chat: React.FC = () => {
           >
             <div>{msg.content}</div>
             {msg.role === "assistant" && (
-              <button
-                className="absolute top-1 right-1 text-sm text-blue-500"
-                onClick={() => handleAudio(msg.content, i)}
-              >
-                {playingIndex === i ? "🔊 Playing..." : "🔊 Listen"}
-              </button>
+              <div className="absolute top-1 right-1 flex space-x-2">
+                <button
+                  className=" text-sm text-blue-500"
+                  onClick={() => handleAudio(msg.content, i)}
+                >
+                  {playingIndex === i ? "🔊 Playing..." : "🔊 Listen"}
+                </button>
+                <button
+                  className="text-sm text-blue-500"
+                  onClick={() => stopTTS()}
+                >
+                  Stop
+                </button>
+              </div>
             )}
           </div>
         ))}

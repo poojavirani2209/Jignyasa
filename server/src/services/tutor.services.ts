@@ -1,19 +1,34 @@
 import { LearningStyle } from "../types/profile";
-import * as LLM from "../ai-server/llm";
 import { LLMMessage } from "../ai-server/llm/provider";
 import { Question } from "../types/chat";
 
 export const startTutoring = async (
   goalId: string,
   subTopicName: string,
-  learningStyle: LearningStyle
+  userDeclaredlearningStyle: LearningStyle,
+  adaptiveLearningStyle: LearningStyle
 ) => {
   try {
     const prompt = `
-You're a personal tutor Teach the following topic clearly and interactively in layman terms.
+You are an expert personal tutor. Your task is to teach the following topic in a clear, engaging, and interactive manner, using layman’s terms:
 
-Topic to teach: "${subTopicName}"
-Preferred learning style: ${learningStyle}
+Topic: ${subTopicName}
+Preferred learning style: ${userDeclaredlearningStyle}
+Analyzed (adaptive) learning style: ${adaptiveLearningStyle}
+
+Your goals:
+
+Adapt your teaching method primarily to the analyzed learning style, while still respecting the user-declared preference.
+
+Make the session engaging, interactive, and easy to follow—use analogies, examples, and questions where appropriate.
+
+Ensure the learner remains productive and interested throughout the session.
+
+Continuously check for understanding and adjust explanations as needed.
+
+Encourage the learner to apply or reflect on the concept in a simple way.
+
+Begin by point outlining what will be covered, and ask user if we can start the session.
 `;
     // LLM.initLLM("tutor");
 
@@ -27,7 +42,54 @@ Preferred learning style: ${learningStyle}
     // const result = await ragEngine.callWithRelevantContext(goalId, prompt);
 
     const response = {
-      content: "Sure lets get started with the subtopic.",
+      content: `Absolutely! Let's dive into the Node.js Event Loop in a clear, visual, and interactive way. Here’s what we’ll cover in this session:
+
+📚 Session Outline: Understanding the Node.js Event Loop
+What is the Event Loop?
+
+Simple analogy (like a restaurant server!)
+
+Why it’s important in Node.js
+
+How Node.js Handles Tasks
+
+Synchronous vs Asynchronous
+
+Where the event loop fits in
+
+The Event Loop Phases (Visual Tour)
+
+Timers
+
+I/O callbacks
+
+Poll
+
+Check
+
+Close callbacks
+
+Common Examples
+
+setTimeout
+
+File reading
+
+Promise and async/await
+
+Interactive Challenge
+
+Predict the output of a short code snippet
+
+Wrap-Up
+
+Review key takeaways
+
+Reflect: When would you care about the event loop?
+
+I'll be using visual analogies, simple metaphors, and interactive questions to keep it fun and effective.
+
+👉 Are you ready to start the session? Or is there anything you’d like to add or focus more on?`,
     };
     try {
       const messages: LLMMessage[] = [
