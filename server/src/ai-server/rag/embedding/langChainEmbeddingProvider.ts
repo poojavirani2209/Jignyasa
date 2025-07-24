@@ -2,14 +2,17 @@ import { VectorEmbeddingProvider } from "./provider";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { Document } from "langchain/document";
+import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/hf_transformers";
 
 export class LangChainEmbeddingProvider implements VectorEmbeddingProvider {
   private stores: Map<string, MemoryVectorStore> = new Map();
 
-  private embedding: OpenAIEmbeddings; //TODO baseembedding.
+  private embedding: HuggingFaceTransformersEmbeddings; //TODO baseembedding.
 
   constructor(apiKey: string) {
-    this.embedding = new OpenAIEmbeddings({ openAIApiKey: apiKey });
+    this.embedding = new HuggingFaceTransformersEmbeddings({
+      modelName: "Xenova/all-MiniLM-L6-v2",
+    });
   }
 
   async embed(texts: string[]): Promise<number[][]> {

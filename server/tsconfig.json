@@ -6,7 +6,8 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "types": ["node","jest"],
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "sourceMap": true
   },
   "include": ["src/**/*.ts", "src/middleware/profile.middleware.ts"],
   "exclude": ["node_modules"]

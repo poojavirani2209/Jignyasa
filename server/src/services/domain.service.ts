@@ -3,6 +3,7 @@ import {
   LearnerGoal,
   Question,
   NewLearnerGoal,
+  Topic,
 } from "../types/goal";
 import { LearningStyle } from "../types/profile";
 import * as LLM from "../ai-server/llm";
@@ -48,21 +49,21 @@ Respond in this exact JSON format:
     ]
   }
 ]
-Only return valid JSON.
-`;
+Only return response in raw JSON format.`;
 
-    //  LLM.initLLM("domain");
+    let ragEngine = LLM.initRAG("domain");
 
-    // // const response = await LLM.callLLM([
-    // //   { role: "system", content: "You are a helpful learning assistant." },
-    // //   { role: "user", content: prompt },
-    // // ]);
+    const response = await ragEngine.callWithEntireContext(
+      id,
+      filePaths,
+      prompt
+    );
 
-    // let ragEngine = LLM.initRAG("domain");
+    // let content: LearningPath = {
+    //   topics: response.content as unknown as Topic[],
+    // };
 
-    // const result = await ragEngine.callWithEntireContext(id, filePaths, prompt);
-
-    const content: LearningPath = {
+    let content = {
       topics: [
         {
           name: "Basic Nodejs",
@@ -223,12 +224,10 @@ Only return valid JSON.
       ],
     };
 
-    let response = { content };
-
     try {
-      return response.content;
+      return content;
     } catch (err) {
-      console.error("Failed to parse learning path JSON:", response.content);
+      console.error("Failed to parse learning path JSON:", content);
       throw new Error("Invalid LLM response");
     }
   } catch (error) {
@@ -252,7 +251,6 @@ function styleToFormat(style: string): string {
   }
 }
 
-//TODO RAG?
 export const createPreKnowledgeQuestionarrie = async (
   learnerGoal: NewLearnerGoal,
   learningStyle: LearningStyle
@@ -289,58 +287,58 @@ Respond in JSON like:
 Only return valid JSON.
 `;
 
-    // LLM.initLLM("domain");
+    LLM.initLLM("domain");
 
-    // const response = await LLM.callLLM([
-    //   { role: "system", content: "You are a helpful learning assistant." },
-    //   { role: "user", content: prompt },
-    // ]);
+    const response = await LLM.callLLM([
+      { role: "system", content: "You are a helpful learning assistant." },
+      { role: "user", content: prompt },
+    ]);
 
-    const content: Question[] = [
-      {
-        id: "q1",
-        question: "Do you have any experience with JavaScript?",
-        type: "multiple-choice",
-        options: ["None", "Basic", "Intermediate", "Expert"],
-      },
-      {
-        id: "q2",
-        question: "Do you have any experience with Node.js?",
-        type: "multiple-choice",
-        options: ["None", "Basic", "Intermediate", "Expert"],
-      },
-      {
-        id: "q3",
-        question: "Is Node.js single-threaded?",
-        type: "multiple-choice",
-        options: ["Yes", "No", "Unknown"],
-      },
-      {
-        id: "q4",
-        question:
-          "Have you ever worked with backend technologies like Express.js, MongoDB, or REST APIs?",
-        type: "multiple-choice",
-        options: ["None", "Some experience", "Comfortable", "Advanced"],
-      },
-      {
-        id: "q5",
-        question:
-          "Which of the following best describes your understanding of asynchronous programming in JavaScript?",
-        type: "multiple-choice",
-        options: [
-          "Never heard of it",
-          "Heard of callbacks",
-          "Understand promises",
-          "Comfortable with async/await",
-        ],
-      },
-    ];
+    // const content: Question[] = [
+    //   {
+    //     id: "q1",
+    //     question: "Do you have any experience with JavaScript?",
+    //     type: "multiple-choice",
+    //     options: ["None", "Basic", "Intermediate", "Expert"],
+    //   },
+    //   {
+    //     id: "q2",
+    //     question: "Do you have any experience with Node.js?",
+    //     type: "multiple-choice",
+    //     options: ["None", "Basic", "Intermediate", "Expert"],
+    //   },
+    //   {
+    //     id: "q3",
+    //     question: "Is Node.js single-threaded?",
+    //     type: "multiple-choice",
+    //     options: ["Yes", "No", "Unknown"],
+    //   },
+    //   {
+    //     id: "q4",
+    //     question:
+    //       "Have you ever worked with backend technologies like Express.js, MongoDB, or REST APIs?",
+    //     type: "multiple-choice",
+    //     options: ["None", "Some experience", "Comfortable", "Advanced"],
+    //   },
+    //   {
+    //     id: "q5",
+    //     question:
+    //       "Which of the following best describes your understanding of asynchronous programming in JavaScript?",
+    //     type: "multiple-choice",
+    //     options: [
+    //       "Never heard of it",
+    //       "Heard of callbacks",
+    //       "Understand promises",
+    //       "Comfortable with async/await",
+    //     ],
+    //   },
+    // ];
 
-    let response = { content };
+    // let response = { content };
 
     try {
       console.log("LLM Response" + JSON.stringify(response.content));
-      return response.content;
+      return response.content as unknown as Question[];
     } catch (err) {
       console.error("Failed to parse questions JSON:", response.content);
       throw new Error("Invalid LLM response");

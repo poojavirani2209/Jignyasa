@@ -36,6 +36,7 @@ export async function chat(req: Request, res: Response) {
   const userId = (req as any).userId;
   try {
     let newMessages: LLMMessage[] = await tutorServices.continueTutoring(
+      goalId,
       messages
     );
     await chatServices.updateChat(subtopic, goalId, userId, newMessages);

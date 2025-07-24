@@ -48,39 +48,29 @@ ${userPrompt}
     `.trim();
   }
 
-  async callWithRelevantContext(id: string, prompt: string): Promise<string> {
+  async callWithRelevantContext(id: string, prompt: string) {
     //TODO need to check how to handle relvancy with latest user message, chat history while getting relevant docs.
     const relevantDocs = await this.embedding.searchDocs(id, prompt);
     const finalPrompt = await this.generateFinalPrompt(prompt, relevantDocs);
-
-    const response = await this.provider.chat([
-      { role: "user", content: finalPrompt },
-    ]);
-
-    return typeof response.content === "string"
-      ? response.content
-      : JSON.stringify(response.content);
-  }
-
-  async callWithEntireContext(
-    id: string,
-    filePaths: string[],
-    prompt: string
-  ): Promise<string> {
-    const fullText = await FileReader.readTextFromFiles(filePaths);
-    const docs = await this.chunkText(fullText);
-    await this.embedding.createVectorStore(id, docs);
-    const finalPrompt = await this.generateFinalPrompt(prompt, docs);
 
     // const response = await this.provider.chat([
     //   { role: "user", content: finalPrompt },
     // ]);
 
-    // return typeof response.content === "string"
-    //   ? response.content
-    //   : JSON.stringify(response.content);
-   
-    return "";
+    // return response;
+  }
+
+  async callWithEntireContext(id: string, filePaths: string[], prompt: string) {
+    const fullText = await FileReader.readTextFromFiles(filePaths);
+    const docs = await this.chunkText(fullText);
+    await this.embedding.createVectorStore(id, docs);
+    // const finalPrompt = await this.generateFinalPrompt(prompt, docs);
+
+    // const response = await this.provider.chat([
+    //   { role: "user", content: finalPrompt },
+    // ]);
+
+    // return response;
   }
 }
 

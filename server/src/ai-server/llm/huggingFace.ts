@@ -43,3 +43,4 @@ function formatMessages(messages: { role: string; content: string }[]): string {
     )
     .join("\n\n");
 }
+

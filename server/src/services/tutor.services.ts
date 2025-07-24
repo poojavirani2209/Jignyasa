@@ -1,6 +1,7 @@
 import { LearningStyle } from "../types/profile";
 import { LLMMessage } from "../ai-server/llm/provider";
 import { Question } from "../types/chat";
+import * as LLM from "../ai-server/llm";
 
 export const startTutoring = async (
   goalId: string,
@@ -30,66 +31,25 @@ Encourage the learner to apply or reflect on the concept in a simple way.
 
 Begin by point outlining what will be covered, and ask user if we can start the session.
 `;
-    // LLM.initLLM("tutor");
 
-    // const response = await LLM.callLLM([
-    //   { role: "system", content: "You are a helpful learning assistant." },
-    //   { role: "user", content: prompt },
-    // ]);
+    let ragEngine = LLM.getRAGEngine("domain");
 
-    // let ragEngine = LLM.initRAG("tutor");
+    let response = await ragEngine.callWithRelevantContext(goalId, prompt);
 
-    // const result = await ragEngine.callWithRelevantContext(goalId, prompt);
+    response = {
+      content: `Okay, let's dive into the fascinating world of the Node.js Event Loop! I understand you prefer a visual learning style, but since you also analyze as being an auditory learner, I'll make sure the explanations are clear and concise and that you can follow along!
 
-    const response = {
-      content: `Absolutely! Let's dive into the Node.js Event Loop in a clear, visual, and interactive way. Here’s what we’ll cover in this session:
+Here's what we'll cover today:
 
-📚 Session Outline: Understanding the Node.js Event Loop
-What is the Event Loop?
+*   **What is the Event Loop?** (The core concept!)
+*   **Why is it important?** (Benefits and how it makes Node.js fast)
+*   **How it works (Simplified)** (Step-by-step breakdown)
+*   **Sync vs. Async code (Quick Refresher)** (Making sure you understand the difference)
+*   **The different phases of the Event Loop (Simplified)** (See how the Event Loop handles different tasks)
+*   **Worker Pool and the Event Loop (Simplified)** (Letting you know that the Event Loop does not handle every task and what tasks it handles)
+*   **A Quick Example** (See how the Event Loop works in practice)
 
-Simple analogy (like a restaurant server!)
-
-Why it’s important in Node.js
-
-How Node.js Handles Tasks
-
-Synchronous vs Asynchronous
-
-Where the event loop fits in
-
-The Event Loop Phases (Visual Tour)
-
-Timers
-
-I/O callbacks
-
-Poll
-
-Check
-
-Close callbacks
-
-Common Examples
-
-setTimeout
-
-File reading
-
-Promise and async/await
-
-Interactive Challenge
-
-Predict the output of a short code snippet
-
-Wrap-Up
-
-Review key takeaways
-
-Reflect: When would you care about the event loop?
-
-I'll be using visual analogies, simple metaphors, and interactive questions to keep it fun and effective.
-
-👉 Are you ready to start the session? Or is there anything you’d like to add or focus more on?`,
+How does that sound? Ready to get started?`,
     };
     try {
       const messages: LLMMessage[] = [
@@ -106,13 +66,34 @@ I'll be using visual analogies, simple metaphors, and interactive questions to k
   }
 };
 
-export const continueTutoring = async (messages: LLMMessage[]) => {
+export const continueTutoring = async (
+  goalId: string,
+  messages: LLMMessage[]
+) => {
   try {
-    // LLM.initLLM("tutor");
-    // const response = await LLM.callLLM(messages);
-    const response = {
-      content: "Lets clear out this with an example.",
+    let ragEngine = LLM.initRAG("domain");
+    const lastInput = messages[messages.length - 1];
+
+    let response = await ragEngine.callWithRelevantContext(
+      goalId,
+      lastInput.content
+    );
+    response = {
+      content: `Okay, let's dive into the fascinating world of the Node.js Event Loop! I understand you prefer a visual learning style, but since you also analyze as being an auditory learner, I'll make sure the explanations are clear and concise and that you can follow along!
+
+Here's what we'll cover today:
+
+*   **What is the Event Loop?** (The core concept!)
+*   **Why is it important?** (Benefits and how it makes Node.js fast)
+*   **How it works (Simplified)** (Step-by-step breakdown)
+*   **Sync vs. Async code (Quick Refresher)** (Making sure you understand the difference)
+*   **The different phases of the Event Loop (Simplified)** (See how the Event Loop handles different tasks)
+*   **Worker Pool and the Event Loop (Simplified)** (Letting you know that the Event Loop does not handle every task and what tasks it handles)
+*   **A Quick Example** (See how the Event Loop works in practice)
+
+How does that sound? Ready to get started?`,
     };
+
     try {
       const newMessages: LLMMessage[] = [
         ...messages,
@@ -172,9 +153,9 @@ Only return valid JSON. Do not include explanations or additional text.
 
 `;
 
-    // let ragEngine = LLM.initRAG("tutor");
+    let ragEngine = LLM.initRAG("domain");
 
-    // const result = await ragEngine.callWithRelevantContext(goalId, prompt);
+    // const response = await ragEngine.callWithRelevantContext(goalId, prompt);
 
     const content: Question[] = [
       {
