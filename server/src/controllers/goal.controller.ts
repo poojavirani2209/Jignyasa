@@ -71,3 +71,19 @@ export const preGoalKnowledgeQuestionarrie = async (
     });
   }
 };
+
+export const getGoalsForUser = async (req: Request, res: Response) => {
+  const userId = (req as any).userId;
+  try {
+    const goals: LearnerGoal[] = await goalServices.fetchAllGoalsForUser(
+      userId
+    );
+
+    res.status(200).json({ goals });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      error: `Error occurred while fetching goals for the user by id ${userId}.`,
+      details: error.message,
+    });
+  }
+};

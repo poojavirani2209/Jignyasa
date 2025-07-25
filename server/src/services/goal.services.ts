@@ -73,3 +73,19 @@ export const fetchGoal = async (goalId: string) => {
     );
   }
 };
+
+export const fetchAllGoalsForUser = async (userId: string) => {
+  try {
+    let goals: LearnerGoal[] = await goalModels.fetchAllGoalsForUser(userId);
+    return goals;
+  } catch (error) {
+    console.error(
+      `Error occurred while fetching goals for user with id ${userId}.`,
+      error
+    );
+
+    throw new Error(
+      `Error occurred while fetching goals for user with id ${userId}.` + error
+    );
+  }
+};

@@ -6,7 +6,7 @@ const SetupGoal: React.FC = () => {
   const [goal, setGoal] = useState("");
   const [days, setDays] = useState<number>(30);
   const [hoursPerDay, setHoursPerDay] = useState<number>(1);
-  const [files, setFiles] = useState<FileList | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
 
   const navigate = useNavigate();
 
@@ -17,36 +17,43 @@ const SetupGoal: React.FC = () => {
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-xl font-bold mb-4">Set Up Your Learning Goal</h2>
-      <input
-        type="text"
-        className="border p-2 mb-3 w-full"
-        placeholder="e.g., Learn TypeScript"
-        value={goal}
-        onChange={(e) => setGoal(e.target.value)}
-      />
-      <input
-        type="number"
-        className="border p-2 mb-3 w-full"
-        placeholder="Number of days"
-        value={days}
-        onChange={(e) => setDays(Number(e.target.value))}
-      />
-      <input
-        type="number"
-        className="border p-2 mb-3 w-full"
-        placeholder="Hours per day"
-        value={hoursPerDay}
-        onChange={(e) => setHoursPerDay(Number(e.target.value))}
-      />
-      <UploadDocs files={files} setFiles={setFiles}></UploadDocs>
-      <button
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-        onClick={handleSubmit}
+    <div className="min-h-screen flex items-center justify-center bg-purple-200">
+      <form
+        className="bg-gray-100 p-6 rounded shadow-md w-150"
+        onSubmit={handleSubmit}
       >
-        Submit
-      </button>
+        <h2 className="just text-xl font-bold mb-4">
+          SETUP A NEW LEARNING GOAL
+        </h2>
+        <input
+          type="text"
+          className="border p-2 mb-3 w-full rounded"
+          placeholder="e.g., Learn TypeScript"
+          value={goal}
+          onChange={(e) => setGoal(e.target.value)}
+        />
+        <input
+          type="number"
+          className="border p-2 mb-3 w-full rounded"
+          placeholder="Number of days"
+          value={days}
+          onChange={(e) => setDays(Number(e.target.value))}
+        />
+        <input
+          type="number"
+          className="border p-2 mb-3 w-full rounded"
+          placeholder="Hours per day"
+          value={hoursPerDay}
+          onChange={(e) => setHoursPerDay(Number(e.target.value))}
+        />
+        <UploadDocs files={files} setFiles={setFiles}></UploadDocs>
+        <button
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+          type="submit"
+        >
+          Submit
+        </button>
+      </form>
     </div>
   );
 };

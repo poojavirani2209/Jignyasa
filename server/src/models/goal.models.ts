@@ -59,9 +59,22 @@ export const addNewLearnerGoalDoc = async (
 export const fetchGoal = async (goalId: string, transaction?: Transaction) => {
   const goal = await LearnerGoalModel.findOne({
     where: {
-      id:goalId,
+      id: goalId,
     },
     transaction,
   });
   return JSON.parse(JSON.stringify(goal)) as LearnerGoal;
+};
+
+export const fetchAllGoalsForUser = async (
+  userId: string,
+  transaction?: Transaction
+) => {
+  const goals = await LearnerGoalModel.findAll({
+    where: {
+      userId,
+    },
+    transaction,
+  });
+  return JSON.parse(JSON.stringify(goals)) as LearnerGoal[];
 };

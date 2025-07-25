@@ -18,4 +18,6 @@ goalRouter.post(
   goalController.preGoalKnowledgeQuestionarrie
 );
 
+goalRouter.get("/all", authorize, goalController.getGoalsForUser);
+
 export default goalRouter;

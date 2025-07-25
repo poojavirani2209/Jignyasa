@@ -10,6 +10,9 @@ export const getUserByUserName = async (
     where: { username: userName },
     transaction,
   });
+  if (!user) {
+    return null;
+  }
   return user.dataValues;
 };
 

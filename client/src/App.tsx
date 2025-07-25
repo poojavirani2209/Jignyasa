@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
+import Register from "./pages/Auth/Register";
+import Login from "./pages/Auth/Login";
 import SetupGoal from "./pages/SetupGoal";
 import GoalSession from "./pages/GoalSession";
 import LearningStyle from "./pages/LearningStyle";
@@ -9,6 +9,7 @@ import Chat from "./pages/Chat";
 import Questionnaire from "./pages/Questionarrie";
 import Quiz from "./pages/Quiz";
 import Dashboard from "./pages/DashBoard";
+import { Goals } from "./pages/Goals";
 
 const App = () => {
   return (
@@ -32,6 +33,10 @@ const App = () => {
          <Route
           path="/dashboard"
           element={<Dashboard />}
+        />
+         <Route
+          path="/goals"
+          element={<Goals />}
         />
       </Routes>
     </BrowserRouter>
