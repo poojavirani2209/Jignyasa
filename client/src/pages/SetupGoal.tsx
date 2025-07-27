@@ -10,7 +10,8 @@ const SetupGoal: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
     navigate(`/pre-knowledge-questionarrie`, {
       state: { goal, days, hoursPerDay, files },
     });

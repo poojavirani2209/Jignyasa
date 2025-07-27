@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LLMMessage, LLMProvider, LLMResponse } from "./provider";
+import { LLMMessage, LLMProvider, LLMResponse } from "../provider";
 
 export class HuggingFaceProvider implements LLMProvider {
   private apiKey: string;
@@ -43,4 +43,3 @@ function formatMessages(messages: { role: string; content: string }[]): string {
     )
     .join("\n\n");
 }
-

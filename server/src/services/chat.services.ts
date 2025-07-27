@@ -1,5 +1,5 @@
 import * as chatModels from "../models/chat.models";
-import { LLMMessage } from "../ai-server/llm/provider";
+import { LLMMessage } from "../ai-server/languageModels/provider";
 
 export const createNewChat = async (
   subTopicName: string,

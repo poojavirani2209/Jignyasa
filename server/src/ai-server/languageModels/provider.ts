@@ -7,8 +7,16 @@ export interface LLMMessage {
   content: string;
 }
 
+export interface VLMMessage extends LLMMessage {
+  imagePath: string;
+}
+
 export interface LLMResponse {
-  content: LearningPath|string;
+  content: LearningPath | string;
+}
+
+export interface VLMResponse {
+  content: any;
 }
 
 export interface LLMProvider {
@@ -16,6 +24,5 @@ export interface LLMProvider {
 }
 
 export interface VLMProvider {
-  chat(messages: LLMMessage[], imagePath:string): Promise<LLMResponse>;
+  chat(messages: VLMMessage[]): Promise<VLMResponse>;
 }
-

@@ -1,9 +1,11 @@
-import { LLMMessage } from "../ai-server/llm/provider";
+import { LLMMessage } from "../ai-server/languageModels/provider";
 import * as goalServices from "../services/goal.services";
 import { LearnerGoal } from "../types/goal";
 import * as chatServices from "../services/chat.services";
 import { QuizPerformance } from "../types/chat";
 import * as logServices from "../services/log.services";
+import * as LanguageModel from "../ai-server/languageModels";
+import { Dashboard } from "../types/dashboard";
 
 export const analyzeSubTopicSession = async (
   subTopicName: string,
@@ -78,32 +80,32 @@ Respond in strict JSON format:
 }
 `;
 
-    // let ragEngine = LLM.initLLM("analyzer");
-    // //callllm
+    let llmEngine = LanguageModel.initLLM("analyzer");
+    const response = await llmEngine.chat([{ role: "user", content: prompt }]);
 
-    const content = {
-      retentionScore: 0.76,
-      varkScores: {
-        visual: 0.5,
-        auditory: 0.8,
-        reading: 0.3,
-        kinesthetic: 0.2,
-      },
-      mostLikelyVARK: "auditory",
-      tutorFeedback: {
-        whatWentWell:
-          "The learner actively engaged with the audio tutor sessions and interacted well with the article-based materials.",
-        whatToImprove:
-          "The learner should consider diversifying input by occasionally reviewing visual content like diagrams or short animations, and clarifying doubts earlier for better concept retention.",
-      },
-      recommendations:
-        "Use more auditory explanations and follow up with quiz-based reinforcement. Avoid overloading with long articles. Try project-based learning to apply concepts in real-world ways and keep engagement high.",
-    };
-    let response = { content };
+    // const content = {
+    //   retentionScore: 0.76,
+    //   varkScores: {
+    //     visual: 0.5,
+    //     auditory: 0.8,
+    //     reading: 0.3,
+    //     kinesthetic: 0.2,
+    //   },
+    //   mostLikelyVARK: "auditory",
+    //   tutorFeedback: {
+    //     whatWentWell:
+    //       "The learner actively engaged with the audio tutor sessions and interacted well with the article-based materials.",
+    //     whatToImprove:
+    //       "The learner should consider diversifying input by occasionally reviewing visual content like diagrams or short animations, and clarifying doubts earlier for better concept retention.",
+    //   },
+    //   recommendations:
+    //     "Use more auditory explanations and follow up with quiz-based reinforcement. Avoid overloading with long articles. Try project-based learning to apply concepts in real-world ways and keep engagement high.",
+    // };
+    // let response = { content };
 
     try {
       console.log("LLM Response" + JSON.stringify(response.content));
-      return response.content;
+      return response.content as unknown as Dashboard;
     } catch (err) {
       throw new Error("Invalid LLM response");
     }
@@ -131,28 +133,26 @@ Respond in JSON like:
 }
 `;
 
-    // let vlm = LLM.initVLM("analyzer");
-    // vlm.chat(
-    //   [
-    //     {
-    //       role: "assistant",
-    //       content: prompt,
-    //     },
-    //   ],
-    //   imagePath
-    // );
+    let vlm = LanguageModel.initVLM("analyzer");
+    const response = await vlm.chat([
+      {
+        role: "assistant",
+        content: prompt,
+        imagePath,
+      },
+    ]);
 
-    const content = {
-      emotion: "Frustrated",
-      confidence: 0.78,
-    };
-    let response = { content };
+    // const content = {
+    //   emotion: "Frustrated",
+    //   confidence: 0.78,
+    // };
+    // let response = { content };
 
     try {
-      console.log("LLM Response" + JSON.stringify(response.content));
+      console.log("VLM Response" + JSON.stringify(response.content));
       return response.content;
     } catch (err) {
-      throw new Error("Invalid LLM response");
+      throw new Error("Invalid VLM response");
     }
   } catch (error) {
     console.error("Failed to analyze emotion from image", error);

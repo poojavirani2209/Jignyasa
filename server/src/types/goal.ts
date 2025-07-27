@@ -37,3 +37,10 @@ export interface Question{
   type:"multiple-choice",
   options:string[]
 }
+
+export interface LearnerGoalDocs {
+  id: string;
+  goalId: string;
+  filename: string;
+  filepath: string;
+}

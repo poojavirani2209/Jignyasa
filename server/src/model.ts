@@ -261,6 +261,49 @@ ChatHistory.init(
   }
 );
 
+// class LearnerProgress extends Sequelize.Model {
+//   public id!: string;
+//   public userId!: string;
+//   public goalId!: string;
+//   public topicName!: string;
+//   public subTopicName!: string;
+//   public completedAt!: Date;
+// }
+
+// LearnerProfile.init(
+//   {
+//     id: {
+//       type: Sequelize.DataTypes.UUID,
+//       defaultValue: Sequelize.DataTypes.UUIDV4,
+//       primaryKey: true,
+//     },
+//     userId: {
+//       type: Sequelize.DataTypes.UUID,
+//       allowNull: false,
+//     },
+
+//     goalId: {
+//       type: Sequelize.DataTypes.UUID,
+//       allowNull: false,
+//     },
+//     topicName: {
+//       type: Sequelize.DataTypes.UUID,
+//       allowNull: false,
+//     },
+//     subTopicName: {
+//       type: Sequelize.DataTypes.UUID,
+//       allowNull: false,
+//     },
+//     completedAt: {
+//       type: Sequelize.DataTypes.DATE,
+//       allowNull: false,
+//     },
+//   },
+//   {
+//     sequelize,
+//     modelName: "LearnerProgress",
+//   }
+// );
 User.hasOne(LearnerProfile, { foreignKey: "userId", onDelete: "CASCADE" });
 User.hasMany(LearnerGoal, { foreignKey: "userId", onDelete: "CASCADE" });
 
@@ -275,5 +318,6 @@ export {
   ChatHistory,
   LearnerGoalDocs,
   InteractionLog,
-  EmotionLog
+  EmotionLog,
+  // LearnerProgress,
 };

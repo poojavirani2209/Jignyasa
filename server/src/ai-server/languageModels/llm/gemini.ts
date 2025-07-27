@@ -1,4 +1,4 @@
-import { LLMMessage, LLMProvider, LLMResponse } from "./provider";
+import { LLMMessage, LLMProvider, LLMResponse } from "../provider";
 import { GenerativeModel, GoogleGenerativeAI } from "@google/generative-ai";
 
 export class GeminiProvider implements LLMProvider {
@@ -45,6 +45,7 @@ function extractJSONFromMarkdown(markdown: string): any | null {
   }
   return markdown;
 }
+
 function convertToGeminiMessage(messages: LLMMessage[]): GeminiLLMMessage[] {
   return messages.map((message) => ({
     role: message.role == "assistant" ? "model" : "user",

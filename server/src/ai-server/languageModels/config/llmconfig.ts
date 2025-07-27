@@ -5,10 +5,10 @@ export const getLLMConfig = () => ({
   },
   tutor: {
     apiKey: process.env.DOMAIN_AGENT_API_KEY!,
-    model: "HuggingFaceH4/zephyr-7b-beta",
+    model: "gemini-2.0-flash-lite",
   },
   analyzer: {
     apiKey: process.env.DOMAIN_AGENT_API_KEY!,
-    model: "HuggingFaceH4/zephyr-7b-beta",//gpt4-0
+    model: "gemini-2.0-flash-lite",
   },
 });

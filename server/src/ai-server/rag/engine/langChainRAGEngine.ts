@@ -4,7 +4,7 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { BaseLLM } from "@langchain/core/language_models/llms";
 import * as FileReader from "../../../utils/fileReader";
 import { RAGEngine } from "./ragEngine";
-import { LLMProvider } from "../../llm/provider";
+import { LLMMessage, LLMProvider } from "../../languageModels/provider";
 import { VectorEmbeddingProvider } from "../embedding/provider";
 
 export class langChainRAGEngine implements RAGEngine {
@@ -32,45 +32,67 @@ export class langChainRAGEngine implements RAGEngine {
     return await chain.run(docs);
   }
 
-  private async generateFinalPrompt(
-    userPrompt: string,
-    contextDocs: Document[]
-  ): Promise<string> {
+  private async generateContext(contextDocs: Document[]): Promise<string> {
     const context = contextDocs.map((doc) => doc.pageContent).join("\n\n");
-    return `
-Use the following context to answer the question:
-
-Context:
-${context}
-
-Question:
-${userPrompt}
-    `.trim();
+    return context;
   }
 
-  async callWithRelevantContext(id: string, prompt: string) {
+  async callWithRelevantContext(
+    id: string,
+    prompt: string,
+    history?: LLMMessage[]
+  ) {
     //TODO need to check how to handle relvancy with latest user message, chat history while getting relevant docs.
     const relevantDocs = await this.embedding.searchDocs(id, prompt);
-    const finalPrompt = await this.generateFinalPrompt(prompt, relevantDocs);
+    const context = await this.generateContext(relevantDocs);
 
-    // const response = await this.provider.chat([
-    //   { role: "user", content: finalPrompt },
-    // ]);
+    let messages: LLMMessage[] = [];
+    if (history) {
+      messages.push(...history);
+    }
 
-    // return response;
+    messages.push({
+      role: "user",
+      content: `Use the following context to answer the question:\n\n Context:\n${context}\n\n  Question:\n${prompt}`,
+    });
+
+    const response = await this.provider.chat(messages);
+
+    let responseMessages: LLMMessage[] = [];
+    if (history) {
+      responseMessages.push(...history);
+    }
+    responseMessages.push({role:"user",content:prompt})
+    
+
+    responseMessages.push({
+      role: "assistant",
+      content: response.content as string,
+    });
+
+    return responseMessages;
   }
 
   async callWithEntireContext(id: string, filePaths: string[], prompt: string) {
+    const docs = await this.createVectorStore(id, filePaths);
+
+    const context = await this.generateContext(docs);
+
+    const response = await this.provider.chat([
+      {
+        role: "user",
+        content: `Use the following context to answer the question:\n\n Context:\n${context}\n\n  Question:\n${prompt}`,
+      },
+    ]);
+
+    return response;
+  }
+
+  async createVectorStore(id: string, filePaths: string[]) {
     const fullText = await FileReader.readTextFromFiles(filePaths);
     const docs = await this.chunkText(fullText);
     await this.embedding.createVectorStore(id, docs);
-    // const finalPrompt = await this.generateFinalPrompt(prompt, docs);
-
-    // const response = await this.provider.chat([
-    //   { role: "user", content: finalPrompt },
-    // ]);
-
-    // return response;
+    return docs;
   }
 }
 

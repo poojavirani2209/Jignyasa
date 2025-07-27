@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import { useLocation, useNavigate } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 
 export type LLMRole = "user" | "assistant";
 
@@ -9,13 +10,19 @@ export interface LLMMessage {
   content: string;
 }
 
-const Chat: React.FC = () => {
+interface ChatProps {
+  goalId: string;
+  subTopicName: string;
+  onClose: any;
+}
+
+const Chat: React.FC<ChatProps> = ({ goalId, subTopicName, onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { subTopicName, goalId } = location.state as {
-    subTopicName: string;
-    goalId: string;
-  };
+  // const { subTopicName, goalId } = location.state as {
+  //   subTopicName: string;
+  //   goalId: string;
+  // };
   const [messages, setMessages] = useState<LLMMessage[]>([]);
   const [input, setInput] = useState("");
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
@@ -96,47 +103,56 @@ const Chat: React.FC = () => {
     });
   }
   return (
-    <div className="fixed top-10 left-[450px] right-10 bottom-10 w-[400px] h-[600px] bg-white shadow-lg border p-4 z-50 flex flex-col">
-      <div className="flex justify-between mb-2">
-        <h3 className="text-lg font-bold">🧑‍🏫 Tutor: {subTopicName}</h3>
-        <button
-          onClick={() => {
-            navigate(-1);
-          }}
-        >
-          ❌
-        </button>
+    <div className="flex flex-col h-full bg-white shadow-inner border rounded p-4">
+      <div className="sticky top-0 bg-white z-10 pb-2">
+        <div className="flex justify-between items-center">
+          <button onClick={onClose}>❌</button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto space-y-2 mb-3">
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`p-2 rounded ${
-              msg.role === "user"
-                ? "bg-blue-100 text-right"
-                : "bg-gray-100 text-left"
-            }`}
-          >
-            <div>{msg.content}</div>
-            {msg.role === "assistant" && (
-              <div className="absolute top-1 right-1 flex space-x-2">
-                <button
-                  className=" text-sm text-blue-500"
-                  onClick={() => handleAudio(msg.content, i)}
-                >
-                  {playingIndex === i ? "🔊 Playing..." : "🔊 Listen"}
-                </button>
-                <button
-                  className="text-sm text-blue-500"
-                  onClick={() => stopTTS()}
-                >
-                  Stop
-                </button>
+        {messages.map((msg, i) => {
+                    if(i==0){return(<></>)}
+
+          return (
+            <div
+              key={i}
+              className={`p-2 rounded ${
+                msg.role === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                key={i}
+                className={`relative max-w-md px-4 py-2 rounded-xl shadow ${
+                  msg.role === "user"
+                    ? "bg-purple-600 text-white rounded-br-none self-end"
+                    : "bg-gray-100 text-gray-800 rounded-bl-none self-start"
+                }`}
+              >
+                <div className="whitespace-pre-wrap break-words">
+                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                </div>
+
+                {msg.role === "assistant" && (
+                  <div className="mt-2 flex gap-2 text-xs text-purple-600">
+                    <button
+                      onClick={() => handleAudio(msg.content, i)}
+                      className="hover:text-purple-800 transition"
+                    >
+                      {playingIndex === i ? "🔊 Playing" : "🔊"}
+                    </button>
+                    <button
+                      onClick={stopTTS}
+                      className="hover:text-purple-800 transition"
+                    >
+                      ⏹️
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </div>
 
       <div className="flex gap-2">

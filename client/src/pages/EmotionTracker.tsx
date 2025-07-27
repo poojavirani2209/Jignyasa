@@ -13,7 +13,7 @@ const EmotionTracker: React.FC<EmotionTrackerProps> = ({
   goalId,
   subTopicName,
   contentType,
-  intervalMs = 60000,
+  intervalMs = 5000,
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);

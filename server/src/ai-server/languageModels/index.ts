@@ -3,9 +3,10 @@ import { getLLMConfig } from "./config/llmconfig";
 import { LangChainEmbeddingProvider } from "../rag/embedding/langChainEmbeddingProvider";
 import { VectorEmbeddingProvider } from "../rag/embedding/provider";
 import { langChainRAGEngine } from "../rag/engine/langChainRAGEngine";
-import { OpenAIVisionProvider } from "./openAIVision";
-import { GeminiProvider } from "./gemini";
+// import { OpenAIVisionProvider } from "./vlm/openAIVision";
+import { GeminiProvider } from "./llm/gemini";
 import { RAGEngine } from "../rag/engine/ragEngine";
+import { GeminiVisionProvider } from "./vlm/geminiAIVision";
 
 let ragEngine: RAGEngine;
 let provider: LLMProvider | VLMProvider;
@@ -14,20 +15,20 @@ let embedding: VectorEmbeddingProvider;
 export const initLLM = (agent: AgentType) => {
   const { apiKey, model } = getLLMConfig()[agent];
   provider = new GeminiProvider(apiKey, model);
-  return provider;
+  return provider as LLMProvider;
 };
 
 export const initVLM = (agent: AgentType) => {
   const { apiKey, model } = getLLMConfig()[agent];
-  provider = new OpenAIVisionProvider(apiKey, model);
-  return provider;
+  provider = new GeminiVisionProvider(apiKey, model);
+  return provider as VLMProvider;
 };
 
 export const initRAG = (agent: AgentType) => {
   const { apiKey, model } = getLLMConfig()[agent];
   provider = new GeminiProvider(apiKey, model);
   embedding = new LangChainEmbeddingProvider(apiKey);
-  ragEngine = new langChainRAGEngine(embedding, provider as LLMProvider)
+  ragEngine = new langChainRAGEngine(embedding, provider as LLMProvider);
   return ragEngine;
 };
 

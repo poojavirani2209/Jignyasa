@@ -6,7 +6,7 @@ import * as goalServices from "../services/goal.services";
 import * as tutorServices from "../services/tutor.services";
 
 import { LearnerProfile } from "../types/profile";
-import { LLMMessage } from "../ai-server/llm/provider";
+import { LLMMessage } from "../ai-server/languageModels/provider";
 import { LearnerGoal } from "../types/goal";
 
 export async function initiateChat(req: Request, res: Response) {

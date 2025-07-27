@@ -7,8 +7,7 @@ import { LearnerProfile } from "../types/profile";
 import { LearnerGoal, LearningPath, Question } from "../types/goal";
 
 export const createNewGoal = async (req: Request, res: Response) => {
-  const { goal, days, hoursPerDay } = req.body;
-  console.log("Gaol body" + goal);
+  const { goal, days, hoursPerDay, questions, answers } = req.body;
 
   const userId = (req as any).userId;
   const files = req.files as Express.Multer.File[];
@@ -26,7 +25,8 @@ export const createNewGoal = async (req: Request, res: Response) => {
     let learningPath: LearningPath = (await domainServices.createPlan(
       newGoal,
       files,
-      learningStyle
+      learningStyle,
+      { questions, answers }
     )) as LearningPath;
 
     await goalServices.updateGoal(
@@ -55,12 +55,12 @@ export const preGoalKnowledgeQuestionarrie = async (
   try {
     const learnerProfile: LearnerProfile =
       await profileServices.getProfileByUserId(userId);
-    const learningStyle = learnerProfile.userDeclaredlearningStyle;
 
     let questionarrie: Question[] =
       await domainServices.createPreKnowledgeQuestionarrie(
         { goal, days, hoursPerDay },
-        learningStyle
+        learnerProfile.userDeclaredlearningStyle,
+        learnerProfile.adaptiveLearningStyle
       );
 
     res.status(200).json({ questionarrie });

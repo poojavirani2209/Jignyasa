@@ -18,6 +18,7 @@ const Questionnaire: React.FC = () => {
     hoursPerDay: number;
     files: FileList;
   };
+  const [loading, setLoading] = useState(true);
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<{ [id: string]: string }>({});
@@ -30,6 +31,7 @@ const Questionnaire: React.FC = () => {
         hoursPerDay,
       });
       setQuestions(res.data.questionarrie);
+      setLoading(false);
     };
     fetchQuestions();
   }, []);
@@ -43,13 +45,15 @@ const Questionnaire: React.FC = () => {
       formData.append("goal", goal);
       formData.append("days", String(days));
       formData.append("hoursPerDay", String(hoursPerDay));
+      formData.append("questions", JSON.stringify(questions));
       formData.append("answers", JSON.stringify(answers));
-      
+
       if (files) {
         Array.from(files).forEach((file) => {
           formData.append("docs", file);
         });
       }
+      setLoading(true);
 
       const response = await api.post("/goal", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -58,6 +62,7 @@ const Questionnaire: React.FC = () => {
       if (response.status != 200) throw new Error("Failed to create goal");
 
       const data = response.data;
+      setLoading(false);
       navigate(`/goal-session`, {
         state: { learningPath: data.learningPath, goalId: data.goalId },
       });
@@ -68,42 +73,59 @@ const Questionnaire: React.FC = () => {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">📋 Learner Questionnaire</h2>
-      {questions.map((q) => (
-        <div key={q.id} className="mb-4">
-          <label className="font-semibold">{q.question}</label>
-          {q.type === "multiple-choice" ? (
-            <select
-              className="block border p-2 mt-1"
-              onChange={(e) =>
-                setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))
-              }
-            >
-              <option>Select</option>
-              {q.options?.map((opt) => (
-                <option key={opt}>{opt}</option>
-              ))}
-            </select>
-          ) : (
-            <input
-              type="text"
-              className="block border p-2 mt-1 w-full"
-              onChange={(e) =>
-                setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))
-              }
-            />
-          )}
-        </div>
-      ))}
+    <>
+      {!loading && (
+        <div className="min-h-screen flex items-center justify-center bg-purple-200">
+          <div className="bg-gray-100 p-6 rounded shadow-md w-80">
+            <h2 className="text-xl font-bold mb-4">📋 Learner Questionnaire</h2>
+            {questions.map((q) => (
+              <div key={q.id} className="mb-4">
+                <label className="font-semibold">{q.question}</label>
+                {q.type === "multiple-choice" ? (
+                  <select
+                    className="w-full border-1 p-2 mb-3 rounded"
+                    onChange={(e) =>
+                      setAnswers((prev) => ({
+                        ...prev,
+                        [q.id]: e.target.value,
+                      }))
+                    }
+                  >
+                    <option>Select</option>
+                    {q.options?.map((opt) => (
+                      <option key={opt}>{opt}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    className="w-full border-1 p-2 mb-3 rounded"
+                    onChange={(e) =>
+                      setAnswers((prev) => ({
+                        ...prev,
+                        [q.id]: e.target.value,
+                      }))
+                    }
+                  />
+                )}
+              </div>
+            ))}
 
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Submit & Generate Plan
-      </button>
-    </div>
+            <button
+              onClick={handleSubmit}
+              className="bg-purple-600 text-white px-4 py-2 rounded w-full"
+            >
+              Submit & Generate Plan
+            </button>
+          </div>
+        </div>
+      )}
+      {loading && (
+        <div className="min-h-screen flex items-center justify-center bg-purple-200">
+          LOADING...
+        </div>
+      )}
+    </>
   );
 };
 

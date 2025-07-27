@@ -1,6 +1,6 @@
 import { Transaction } from "sequelize";
 import { LearnerGoal as LearnerGoalModel, ChatHistory } from "../model";
-import { LLMMessage } from "../ai-server/llm/provider";
+import { LLMMessage } from "../ai-server/languageModels/provider";
 import { ChatHistoryMetaData } from "../types/chat";
 
 type ChatHistoryUpdate = Partial<Omit<ChatHistoryMetaData, "id">>;

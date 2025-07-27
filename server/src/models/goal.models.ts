@@ -1,6 +1,6 @@
 import { Transaction } from "sequelize";
-import { LearnerGoalDocs, LearnerGoal as LearnerGoalModel } from "../model";
-import { LearnerGoal, LearningPath, NewLearnerGoal } from "../types/goal";
+import { LearnerGoalDocs as LearnerGoalDocsModel, LearnerGoal as LearnerGoalModel } from "../model";
+import { LearnerGoal, LearnerGoalDocs, LearningPath, NewLearnerGoal } from "../types/goal";
 
 type LearnerGoalUpdate = Partial<Omit<LearnerGoal, "id">>;
 
@@ -45,7 +45,7 @@ export const addNewLearnerGoalDoc = async (
   file: any,
   transaction?: Transaction
 ) => {
-  const newGoalDoc = await LearnerGoalDocs.create(
+  const newGoalDoc = await LearnerGoalDocsModel.create(
     {
       goalId,
       filename: file.originalname,
@@ -54,6 +54,19 @@ export const addNewLearnerGoalDoc = async (
     { transaction }
   );
   return newGoalDoc;
+};
+
+export const fetchGoalLearnerGoalDoc = async (
+  goalId: string,
+  transaction?: Transaction
+) => {
+  const goalDocs = await LearnerGoalDocsModel.findAll({
+    where: {
+      goalId,
+    },
+    transaction,
+  });
+  return goalDocs as LearnerGoalDocs[];
 };
 
 export const fetchGoal = async (goalId: string, transaction?: Transaction) => {

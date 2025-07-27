@@ -20,6 +20,7 @@ async function seed() {
   await LearnerGoalDocs.sync({ force: true });
   await InteractionLog.sync({ force: true });
   await EmotionLog.sync({ force: true });
+  // await LearnerProgress.sync({ force: true });
 
   //insert data
   await User.create({

@@ -21,7 +21,6 @@ const App = () => {
         <Route path="/setup-goal" element={<SetupGoal />} />
         <Route path="/goal-session" element={<GoalSession />} />
         <Route path="/learning-style" element={<LearningStyle />} />
-        <Route path="/chat" element={<Chat />} />
         <Route
           path="/pre-knowledge-questionarrie"
           element={<Questionnaire />}
