@@ -50,8 +50,10 @@ Chat History (between tutor and learner):
 ${JSON.stringify(chatHistory)}
 
 
-Quiz Performance:
-(Each object has the question, correct answer, user's selected answer)
+Quiz Performance: It had 2 objects:
+questions: each question has a correct option number
+answers: these are learner answers. 
+Compare each answer text with corresponding index question, correct option number text. Accordingly calculate retention score. 
 ${JSON.stringify(quizPerformance)}
 
 Interaction Logs:
@@ -126,11 +128,12 @@ Given this image of a person using a learning app, classify the user's emotion i
 
 Also provide a confidence score from 0 to 1.
 
-Respond in JSON like:
+Please return only a raw JSON object with the following structure:
 {
   "emotion": "Frustrated",
   "confidence": 0.78
 }
+Do not include markdown, code blocks, or any extra text. Just output the JSON object.
 `;
 
     let vlm = LanguageModel.initVLM("analyzer");

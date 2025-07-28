@@ -29,9 +29,7 @@ export class LangChainEmbeddingProvider implements VectorEmbeddingProvider {
 
   async searchDocs(id: string, query: string, topK = 3): Promise<Document[]> {
     if (!this.stores.get(id)) {
-      throw new Error(
-        "Vector store not initialized. Call createVectorStore first."
-      );
+      return [];
     }
     return this.stores.get(id).similaritySearch(query, topK);
   }

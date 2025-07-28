@@ -11,9 +11,9 @@
   "scripts": {
     "build:client": "cd client && npm run build",
     "build:server": "cd server && npm run seed && npm run build",
-    "start": "ts-node electron/electron.ts",
+    "start": "tsc --project tsconfig.json",
     "build:all": "npm run build:client && npm run build:server",
-    "package": "electron-packager . MyApp --platform=win32 --arch=x64 --out=release --overwrite"
+    "package": "npm run build:all && electron-packager . MyApp --platform=win32 --arch=x64 --out=release --overwrite"
   },
   "type": "module"
 }

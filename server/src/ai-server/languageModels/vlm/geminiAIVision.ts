@@ -16,22 +16,30 @@ export class GeminiVisionProvider implements VLMProvider {
   }
 
   async chat(messages: VLMMessage[]): Promise<VLMResponse> {
-    let geminiMessages = convertToGeminiMessage(messages);
+    let geminiMessages = convertToGeminiMessage(messages[0]);
 
-    const response = await this.genAIModel.generateContent(geminiMessages);
+    const response = await this.genAIModel.generateContent({contents:[{"role":"model",parts:geminiMessages}]});
     return {
-      content: response.response.text(),
+      content: JSON.parse(cleanMarkdown(response.response.candidates[0].content.parts[0].text)),
     };
   }
 
+  
   async getModel() {
     return this.model;
   }
 }
 
-function convertToGeminiMessage(messages: VLMMessage[]): any {
-  return messages.map((message) => {
-    const parts = [
+function cleanMarkdown(text: string): string {
+  return text
+    .replace(/```json/g, "")
+    .replace(/```/g, "")
+    .replace(/^_id=.*\n/, "")
+    .replace(/^_id=.*\n/, "") // remove _id if needed
+    .trim();
+}
+function convertToGeminiMessage(message: VLMMessage): any {
+    return [
       { text: message.content },
       {
         inlineData: {
@@ -40,12 +48,6 @@ function convertToGeminiMessage(messages: VLMMessage[]): any {
         },
       },
     ];
-
-    return {
-      role: message.role === "assistant" ? "model" : "user",
-      parts,
-    };
-  });
 }
 
 function getBase64Image(imagePath: string) {
