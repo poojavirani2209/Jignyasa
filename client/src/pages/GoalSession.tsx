@@ -77,7 +77,7 @@ const GoalSession: React.FC = () => {
     const timeSpentSeconds = Math.floor((Date.now() - startedAt) / 1000);
     const subTopicName = selectedSubTopic?.name || "";
 
-    const res = await api.post("/log/interaction", {
+    await api.post("/log/interaction", {
       goalId,
       contentType,
       timeSpentSeconds,
@@ -279,7 +279,7 @@ const GoalSession: React.FC = () => {
                 <h4 className="text-md font-semibold mb-3 text-gray-800">
                   🎥 Videos
                 </h4>
-                {selectedSubTopic?.videos.map((v, i) => {
+                {selectedSubTopic?.videos.map((v) => {
                   const isCompleted = completedResources.has(v.url);
 
                   return (

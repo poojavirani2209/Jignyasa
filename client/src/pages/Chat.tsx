@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
-import { useLocation, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
 export type LLMRole = "user" | "assistant";
@@ -17,8 +16,8 @@ interface ChatProps {
 }
 
 const Chat: React.FC<ChatProps> = ({ goalId, subTopicName, onClose }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  // const location = useLocation();
+  // const navigate = useNavigate();
   // const { subTopicName, goalId } = location.state as {
   //   subTopicName: string;
   //   goalId: string;
@@ -90,7 +89,7 @@ const Chat: React.FC<ChatProps> = ({ goalId, subTopicName, onClose }) => {
     setPlayCount((c) => c + 1);
     playTTS(text, index, async () => {
       const timeSpent = Date.now() - (startTime || Date.now());
-      const res = await api.post("/log/interaction", {
+       await api.post("/log/interaction", {
         goalId,
         contentType: "tutor-audio",
         timeSpentSeconds: Math.floor(timeSpent / 1000),

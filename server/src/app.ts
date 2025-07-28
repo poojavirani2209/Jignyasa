@@ -11,9 +11,12 @@ import goalRouter from "./routes/goal.routes";
 import chatRouter from "./routes/chat.routes";
 import logRouter from "./routes/log.routes";
 import analysisRouter from "./routes/analysis.routes";
+import path from "path";
 
-dotenv.config();
+console.log("env Path+" + path.resolve(__dirname, "../../.env"));
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());

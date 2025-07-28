@@ -1,0 +1,19 @@
+{
+  "main": "dist/electron.js",
+  "devDependencies": {
+    "@types/electron": "^1.4.38",
+    "@types/node": "^24.1.0",
+    "electron": "^37.2.4",
+    "electron-packager": "^17.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run seed && npm run build",
+    "start": "ts-node electron/electron.ts",
+    "build:all": "npm run build:client && npm run build:server",
+    "package": "electron-packager . MyApp --platform=win32 --arch=x64 --out=release --overwrite"
+  },
+  "type": "module"
+}

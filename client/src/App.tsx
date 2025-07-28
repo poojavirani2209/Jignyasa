@@ -1,11 +1,10 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 import SetupGoal from "./pages/SetupGoal";
 import GoalSession from "./pages/GoalSession";
 import LearningStyle from "./pages/LearningStyle";
 import Home from "./pages/Home";
-import Chat from "./pages/Chat";
 import Questionnaire from "./pages/Questionarrie";
 import Quiz from "./pages/Quiz";
 import Dashboard from "./pages/DashBoard";
@@ -13,11 +12,10 @@ import { Goals } from "./pages/Goals";
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="*" element={<Home />} />
         <Route path="/setup-goal" element={<SetupGoal />} />
         <Route path="/goal-session" element={<GoalSession />} />
         <Route path="/learning-style" element={<LearningStyle />} />
@@ -37,8 +35,10 @@ const App = () => {
           path="/goals"
           element={<Goals />}
         />
+        <Route path="*" element={<Home />} />
+
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 

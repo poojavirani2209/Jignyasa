@@ -14,6 +14,7 @@ const Register = () => {
     try {
       const res = await api.post("/auth/register", { username, password });
       localStorage.setItem("token", res.data.accessToken);
+      console.log("navigating to learning style");
       navigate("/learning-style");
     } catch (error: any) {
       setError(error.response.data.details);

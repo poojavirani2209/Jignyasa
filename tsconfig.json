@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "esnext",
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "types": ["node", "electron"],
+    "allowArbitraryExtensions": true,
+        "sourceMap": true
+
+  },
+  "include": ["electron"]
+}

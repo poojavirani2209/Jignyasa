@@ -5,11 +5,12 @@ import api from "../services/api";
 const LearningStyle = () => {
   const [style, setStyle] = useState("Visual");
   const navigate = useNavigate();
+  console.log("in learning style")
 
   const handleNext = async (e: any) => {
     try {
       e.preventDefault();
-      const res = await api.put("/profile/learning-style", {
+      await api.put("/profile/learning-style", {
         learningStyle: style,
       });
       navigate("/setup-goal");

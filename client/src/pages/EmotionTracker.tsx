@@ -35,7 +35,7 @@ const EmotionTracker: React.FC<EmotionTrackerProps> = ({
 
         intervalRef.current = setInterval(() => {
           captureScreenshot();
-        }, intervalMs);
+        }, intervalMs) as any;
       } catch (err) {
         console.warn("Webcam access denied:", err);
       }
