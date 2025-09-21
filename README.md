@@ -10,5 +10,8 @@ Jignyasa is a holistic learner-centered system that not only senses emotional st
 5. Dynamic learner modeling that updates in real-time to support differentiated instruction and feedback.
 By bridging emotion recognition with established learning theories and learner agency, Jignaysa offers a next-generation platform that prioritizes personalized, ethical, and pedagogically meaningful learning
 
-https://github.com/user-attachments/assets/24a8e131-1d9d-4f3c-a9e2-1cb5a7671978
+
+
+
+https://github.com/user-attachments/assets/107235cf-5261-4dff-b4ef-21a8e47329a0
 
